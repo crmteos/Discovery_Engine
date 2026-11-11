@@ -1,6 +1,7 @@
 # Discovery Engine - Master Project State
 ## 🚨 ОСТАННІЙ ЗВІТ ВИКОНАННЯ (GATEWAY REPORT)
 - **Дата та час**: 2026-11-11
+- **Рпозиторій**: https://github.com/crmteos/Discovery_Engine
 - **Фаза**: Phase 29 — COMPLETE
 - **Шина повідомлень (Message ID)**: msg_20261111_151709 (status: completed)
 - **Виконані дії**:
