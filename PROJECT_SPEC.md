@@ -1,4 +1,4 @@
-# PROJECT_SPEC — Discovery Engine (v4.1.0 / Phase 32)
+# PROJECT_SPEC — Discovery Engine (v4.2.0 / Phase 33)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_SPEC.md
 
 ## 1. Project Goal
@@ -11,6 +11,7 @@ Zero-Budget Open-Source Autonomous Discovery Engine & Knowledge Graph Formalizat
 - **RAM:** 16 GB
 - **Inference:** CPU-bound Ollama (`qwen2.5-coder`, `llama3.1:8b`, `qwen2.5:7b`). No NVIDIA CUDA / Dedicated GPU.
 - **Gateway:** Local Ollama REST (`http://127.0.0.1:11434`), model fallback chain `qwen2.5-coder:14b` → `llama3.1:8b` → `qwen2.5:7b`, implemented in `00_Project_Interface/src/ollama_gateway.py` with liveness ping (`/api/tags`) and graceful offline fallback.
+- **Node 05 — Knowledge Aggregator:** Ollama RDF Triple Extraction — LLM extraction pipeline (`qwen2.5-coder:14b` → `llama3.1:8b` → `qwen2.5:7b`) converting unstructured text into W3C PROV-O / SKOS compliant RDF triplets with SHACL shape validation. `--llm-extract` mode in `05_Knowledge_Aggregator/src/intake_processor.py`. Offline fallback: gracefully skip LLM stage when Ollama server unreachable.
 - **Core Libraries:** NetworkX, SymPy, PyTorch (CPU-mode), Pure Python Fallback Engines.
 - **Budget Limit:** $0.00 (No external paid APIs, Vector DBs, or cloud services).
 - **Remote Repository**: https://github.com/crmteos/Discovery_Engine.git

@@ -2,7 +2,7 @@
 
 **Notebook Role:** Master Architect — Data Plane (Second Notebook of the Root Master Governance Pair)
 **Companion File:** `PROJECT_STATE.md` — Control Plane (Master Governance, Node Registry, System Metrics)
-**System Version:** v4.0.0 — Phase 31
+**System Version:** v4.2.0 / Phase 33
 **Date:** 2026-11-11
 **Budget:** $0.00 (Pure Open-Source & Local Hardware Stack)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_CONTEXT.md
@@ -42,6 +42,7 @@ All data-plane artifacts flow through the **Universal Transactional JSONL Messag
 | Directive intake | `system.master_architect` → `Bridge/in/` | `cline.executor` | Universal Message Bus (JSONL) | Directive Markdown (`.md`) |
 | Concept ingestion | OSINT / raw concepts | `05_Knowledge_Aggregator/Intake_Queue/` | Node-local bridge/in | Cognitive model template JSON |
 | Triple normalization | `05_Knowledge_Aggregator` | `Processed_Gate/normalized_triples/` | Internal | Normalized triple JSON |
+| NLP Intake Pipeline | `05_Knowledge_Aggregator` | `Processed_Gate/rdf_triplets/` | Local LLM (`ollama_gateway.py`) | RDF triplet JSON (`subject`, `predicate`, `object`, `graph_context`) |
 | Graph build | Normalized triples | `01_Formal_Core/Knowledge_Graphs/kg_engine.py` | Internal import | RDF triple set |
 | Target model assembly | Validated triples | `06_Formalized_Model/` | Message Bus (`model_bus_listener.py`) | ISO/IEC/IEEE 42010 3-view JSON |
 | Execution reporting | `cline.executor` | `Bridge/out/execution_reports/` | File write | Markdown report |
