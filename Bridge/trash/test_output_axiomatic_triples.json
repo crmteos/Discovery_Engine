@@ -1,0 +1,98 @@
+{
+  "triple_set_id": "triple_4d08ff1c",
+  "triple_count": 15,
+  "triples": [
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": "prov:wasDerivedFrom",
+      "object": "causal_chain_c3b0a31b",
+      "prov_type": "causal_chain"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": "prov:wasInfluencedBy",
+      "object": "causal_chain_c3b0a31b",
+      "prov_type": "causal_chain"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": "prov:was_influenced_by",
+      "object": "causal_chain_c3b0a31b",
+      "prov_type": "temporal_annotation"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": "prov:was_derived_from",
+      "object": "causal_chain_c3b0a31b",
+      "prov_type": "temporal_annotation"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": "prov:generated_at",
+      "object": "2024-01-15T10:30:00+00:00",
+      "prov_type": "temporal_annotation"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": "skos:related",
+      "object": "spatial_vector_24848dc6",
+      "prov_type": "spatial_invariant"
+    },
+    {
+      "subject": "spatial_vector_24848dc6",
+      "predicate": "a",
+      "object": "skos:Concept",
+      "prov_type": "spatial_concept"
+    },
+    {
+      "subject": "spatial_vector_24848dc6",
+      "predicate": "skos:topologicalVector",
+      "object": "{'x': 1.0, 'y': 2.0, 'z': 3.0}",
+      "prov_type": "spatial_vector"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": ":vector_reference",
+      "object": "spatial_vector_24848dc6",
+      "prov_type": "spatial_attribute"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": ":x_coordinate",
+      "object": 1.0,
+      "prov_type": "spatial_attribute"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": ":y_coordinate",
+      "object": 2.0,
+      "prov_type": "spatial_attribute"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": ":z_coordinate",
+      "object": 3.0,
+      "prov_type": "spatial_attribute"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": ":relation_type",
+      "object": "skos:related",
+      "prov_type": "spatial_attribute"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": "prov:source",
+      "object": "audit_validated",
+      "prov_type": "original_provenance"
+    },
+    {
+      "subject": "triple_4d08ff1c",
+      "predicate": "rdf:value",
+      "object": "knowledge graph integration pattern",
+      "prov_type": "propositional_content"
+    }
+  ],
+  "conversion_timestamp": "2026-11-09T13:27:09.559315+00:00",
+  "source_format": "anthropomorphic_to_invariant"
+}

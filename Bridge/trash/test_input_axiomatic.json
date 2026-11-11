@@ -1,0 +1,13 @@
+{
+  "timestamp": "2024-01-15T10:30:00Z",
+  "spatial_coordinates": {
+    "x": 1.0,
+    "y": 2.0,
+    "z": 3.0
+  },
+  "human_perceptual_label": "observed at position",
+  "content": "knowledge graph integration pattern",
+  "prov_annotations": {
+    "source": "audit_validated"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "directive": "DIRECTIVE_PHASE19_v2.8.0",
+  "phase": "Phase 19",
+  "version": "v2.8.0",
+  "topic": "directive-phase19-v2.8.0",
+  "issuer": "system.master_architect",
+  "target": "cline.executor",
+  "budget": "$0.00",
+  "status": "DIRECTIVE_ISSUED",
+  "context": "AnythingLLM GUI Gateway Integration & REST API Bridge",
+  "objective": "Establish gateway bridge between AnythingLLM REST API and central Message Bus",
+  "tasks": [
+    "Create schema contract: 00_Project_Interface/schemas/anythingllm_gateway_schema.json",
+    "Develop gateway: 00_Project_Interface/src/anythingllm_gateway.py (--test, --sync-workspace, --send-chat)",
+    "Update system_manifest.json to v2.8.0 and register new module",
+    "Update PROJECT_STATE.md header metrics and Phase 19 record",
+    "Run verification: py_compile, --test, test_e2e_pipeline.py"
+  ],
+  "api_endpoints": {
+    "health_ping": "GET http://localhost:3001/api/v1/auth",
+    "workspaces": "GET /api/v1/workspaces",
+    "document_upload": "POST /api/v1/workspace/{slug}/update-embeddings",
+    "chat_execution": "POST /api/v1/workspace/{slug}/chat"
+  },
+  "acceptance_criteria": {
+    "syntax_check": "py_compile exit_code 0",
+    "gateway_test": "--test exit_code 0",
+    "pipeline_integrity": "test_e2e_pipeline.py exit_code 0",
+    "manifest_integrity": "json.load() PASSED",
+    "execution_report": "Bridge/out/execution_reports/report_phase19_v2.8.0_[TIMESTAMP].md"
+  }
+}

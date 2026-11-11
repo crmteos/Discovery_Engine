@@ -1,0 +1,17 @@
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\01_Formal_Core\src\02_NeuroSymbolic_Bridge\INSTRUCTIONS_ROLE.md
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\01_Formal_Core\src\02_NeuroSymbolic_Bridge\README.md
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\05_Knowledge_Aggregator\AGGREGATOR_CHECKLIST.md
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\05_Knowledge_Aggregator\AGGREGATOR_OPERATIONAL_PROTOCOL.md
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\05_Knowledge_Aggregator\AGGREGATOR_STATE.md
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\05_Knowledge_Aggregator\INSTRUCTIONS_ROLE_AGGREGATOR.md
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\05_Knowledge_Aggregator\intake_processor.py
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\05_Knowledge_Aggregator\NOTEBOOK_PASSPORT_AGGREGATOR.md
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\05_Knowledge_Aggregator\README.md
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\05_Knowledge_Aggregator\schema_validator.py
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\Bridge\.idempotency_store.json
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\Bridge\bus_manager.py
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\Bridge\Cline_Directive_Physical_Refactor.md
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\Bridge\Cline_Directive_Refactor_Pipeline.md
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\Bridge\messages.jsonl
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\Bridge\messages_dlq.jsonl
+c:/Users/crmte/OneDrive/Desktop/Projects/Discovery_Engine\Bridge\test_sample.jsonl
