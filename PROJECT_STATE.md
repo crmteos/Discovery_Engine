@@ -1,22 +1,28 @@
 # Discovery Engine - Master Project State
 ## 🚨 ОСТАННІЙ ЗВІТ ВИКОНАННЯ (GATEWAY REPORT)
-- **Дата та час**: 2026-11-11 16:40
-- **Фаза**: Phase 28 — COMPLETE
-- **Шина повідомлень (Message ID)**: msg_20261111_121119 (status: completed)
+- **Дата та час**: 2026-11-11
+- **Фаза**: Phase 29 — COMPLETE
+- **Шина повідомлень (Message ID)**: msg_20261111_151709 (status: completed)
 - **Виконані дії**:
-  1. [x] Впроваджено ADR-004 у PROJECT_SPEC.md та PROJECT_STATE.md
-  2. [x] Створено/оновлено кореневі файли специфікації та стану
-  3. [x] Збережено docs/STARTPOINT_META_PROMPT.md
-  4. [x] Виконано локальний комміт стану через Git
+  1. [x] Реалізовано `tests/e2e/test_pure_e2e_pipeline.py` — 4 етапи чистого Python E2E-конвеєра: intake та нормалізація триплетів (`05_Knowledge_Aggregator`), Pure RDF топологія (`pure_rdf_engine.py`), Pure TDA прогалини та інваріанти Betti H0/H1 (`pure_tda_engine.py`), Pure Symbolic Regression та збирання моделі (`pure_symbolic_engine.py` + `06_Formalized_Model`)
+  2. [x] Реалізовано `00_Project_Interface/src/ollama_gateway.py` — liveness ping до Ollama API (`/api/tags`), ланцюжок fallback моделей `qwen2.5-coder:14b → llama3.1:8b → qwen2.5:7b`, автономний режим `--test` з graceful fallback, коли сервер офлайн
+  3. [x] `py_compile` перевірка синтаксису всіх змінених файлів — exit_code: 0
+  4. [x] Виконано `test_pure_e2e_pipeline.py` — exit_code: 0 (4/4 етапи)
+  5. [x] Виконано `ollama_gateway.py --test` — exit_code: 0
+  6. [x] Статус повідомлення `directive:phase29` позначено як `completed` на `Bridge/bus_manager.py`
+  7. [x] Виконано локальний комміт стану через Git
 - **Результати перевірок (Validation & Tests)**:
   - py_compile: PASSED (exit_code: 0)
-  - bus_manager.py status check: PASSED
-  - E2E smoke tests: PASSED
+  - tests/e2e/test_pure_e2e_pipeline.py: PASSED (4/4 stages, exit_code: 0)
+  - ollama_gateway.py --test: PASSED (exit_code: 0)
+  - bus_manager.py post/update: PASSED
 - **Змінені / створені файли**:
-  - PROJECT_SPEC.md (додано ADR-004, v3.7.0)
-  - PROJECT_STATE.md (оновлено до v3.7.0, додано Gateway Report)
-  - PROJECT_CONTEXT.md (синхронізовано до v3.7.0)
-  - docs/STARTPOINT_META_PROMPT.md (створено)
+  - tests/e2e/test_pure_e2e_pipeline.py (створено)
+  - 00_Project_Interface/src/ollama_gateway.py (створено)
+  - PROJECT_SPEC.md (синхронізовано до v3.8.0 / Phase 29)
+  - PROJECT_CONTEXT.md (синхронізовано до v3.8.0 / Phase 29; додано розділ 10 Ollama Gateway REST API Topology)
+  - PROJECT_STATE.md (оновлено до v3.8.0 / Phase 29; оновлено блоком 🚨 ОСТАННІЙ ЗВІТ ВИКОНАННЯ)
+  - Bridge/messages.jsonl (додано msg_20261111_151709 directive:phase29, статус completed)
 - **Відомі блокери / проблеми**: Відсутні (0 errors)
 
 
@@ -26,10 +32,10 @@
 - **ENGINEERING_STANDARD:** Production-Grade (Zero Mocks / Real Math & Code)
 - **ROLES:** System Architect (Gemini), Execution Engineer (Cline), Gateway Operator (User)
 
-**Header Metrics:** BUDGET: $0.00 | SESSION: Autonomous Clean State | SYSTEM READINESS: 🟢 100% Core & Governance Synchronized | VERSION: v3.7.0 | PHASE: Phase 28
+**Header Metrics:** BUDGET: $0.00 | SESSION: Autonomous Clean State | SYSTEM READINESS: 🟢 100% Core & Governance Synchronized | VERSION: v3.8.0 | PHASE: Phase 29
 
 **Last Updated:** 2026-11-11  
-**Current Phase:** Phase 28 — Institutionalization of ADR-004 (3-File Memory Protocol & Gateway Report Standard) (v3.7.0) — ADR-004 added to PROJECT_SPEC.md Section 5; PROJECT_CONTEXT.md synchronized to v3.7.0; PROJECT_STATE.md upgraded with 🚨 ОСТАННІЙ ЗВІТ ВИКОНАННЯ (GATEWAY REPORT) block at top; docs/STARTPOINT_META_PROMPT.md saved on disk; local Git commit executed. Budget: $0.00.
+**Current Phase:** Phase 29 — E2E Pure Python Pipeline Benchmark & Ollama Gateway Binding (v3.8.0) — `tests/e2e/test_pure_e2e_pipeline.py` implemented and verified (4/4 stages, exit_code: 0); `00_Project_Interface/src/ollama_gateway.py` implemented and verified (`--test` exit_code: 0, fallback chain qwen2.5-coder:14b → llama3.1:8b → qwen2.5:7b); PROJECT_SPEC.md / PROJECT_CONTEXT.md / PROJECT_STATE.md synchronized to v3.8.0 / Phase 29; 🚨 ОСТАННІЙ ЗВІТ ВИКОНАННЯ (GATEWAY REPORT) block at top; message msg_20261111_151709 (directive:phase29) status → completed on Bridge/bus_manager.py. Budget: $0.00.
 
 ---
 
@@ -332,3 +338,23 @@ E C H O   i s   o n . 
 
 **Budget:** $0.00
 
+
+### Phase 29: E2E Pure Python Pipeline Benchmark & Ollama Gateway Binding (v3.8.0) — COMPLETE
+**Status:** ✅ Complete  **Date:** 2026-11-11  **Budget:** $0.00
+
+**Deployed Artifacts:**
+- `tests/e2e/test_pure_e2e_pipeline.py` — Pure Python E2E integration benchmark, 4 stages: (1) Knowledge Intake & Triple Normalization (`05_Knowledge_Aggregator`), (2) Pure RDF Topology & Graph Construction (`pure_rdf_engine.py`), (3) Pure TDA Gap & Invariant Extraction Betti H0/H1 (`pure_tda_engine.py`), (4) Pure Symbolic Regression & Model Assembly (`pure_symbolic_engine.py` + `06_Formalized_Model`). Zero external native C-dependencies; report written to `Bridge/out/execution_reports/report_pure_e2e_pipeline_[TIMESTAMP].md`.
+- `00_Project_Interface/src/ollama_gateway.py` — Local Ollama REST Gateway (v3.8.0): liveness ping `GET /api/tags`, model fallback chain `qwen2.5-coder:14b → llama3.1:8b → qwen2.5:7b`, standalone `--test` CLI with graceful fallback when the Ollama server is offline.
+- `PROJECT_SPEC.md` — header synchronized to v3.8.0 / Phase 29; Ollama gateway binding added to Hardware & Stack Specs; DoD synchronized to v3.8.0 / Phase 29.
+- `PROJECT_CONTEXT.md` — header synchronized to v3.8.0 / Phase 29; Section 10 Ollama Gateway REST API Topology added (base URL, endpoints, fallback chain, offline behaviour).
+- `PROJECT_STATE.md` — upgraded to v3.8.0 / Phase 29; `🚨 ОСТАННІЙ ЗВІТ ВИКОНАННЯ (GATEWAY REPORT)` block at top; Phase 29 logged in Execution History; system readiness 🟢 100% Core & Governance Synchronized.
+- Message `msg_20261111_151709` (`directive:phase29`) status → `completed` on `Bridge/bus_manager.py` (result: exit_code 0, report ref `Bridge/out/execution_reports/report_pure_e2e_pipeline_20261111_151219.md`).
+
+**Verification:**
+- `python -m py_compile tests/e2e/test_pure_e2e_pipeline.py` → exit_code: 0
+- `python -m py_compile 00_Project_Interface/src/ollama_gateway.py` → exit_code: 0
+- `python tests/e2e/test_pure_e2e_pipeline.py` → 4/4 stages PASSED, overall exit_code: 0
+- `python 00_Project_Interface/src/ollama_gateway.py --test` → PASSED, exit_code: 0 (ping OK, resolved model qwen2.5-coder:14b)
+- Local Git commit: `feat(phase-29): e2e pure python benchmark & ollama gateway binding`
+
+**Budget:** $0.00

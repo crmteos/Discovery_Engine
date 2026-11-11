@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AnythingLLM Gateway Schema Contract",
+  "description": "Operational schema contract for the AnythingLLM REST API gateway bridge (Phase 19 v2.8.0). Defines API endpoint bindings, request/response payloads, and message-bus directive schemas.",
+  "version": "2.8.0",
+  "type": "object",
+  "required": ["gateway", "endpoints"],
+  "properties": {
+    "gateway": {
+      "type": "object",
+      "required": ["name", "version", "base_url", "status"],
+      "properties": {
+        "name": { "type": "string", "const": "anythingllm_gateway" },
+        "version": { "type": "string", "const": "2.8.0" },
+        "base_url": { "type": "string", "pattern": "^http://localhost:3001/api/v1" },
+        "status": { "type": "string", "enum": ["online", "offline", "degraded"] },
+        "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 120, "default": 30 }
+      }
+    },
+    "endpoints": {
+      "type": "object",
+      "required": ["health", "workspaces", "document_upload", "chat"],
+      "properties": {
+        "health": {
+          "type": "object",
+          "required": ["method", "path"],
+          "properties": {
+            "method": { "type": "string", "enum": ["GET"] },
+            "path": { "type": "string", "enum": ["/auth", "/ping"] },
+            "description": { "type": "string" }
+          }
+        },
+        "workspaces": {
+          "type": "object",
+          "required": ["method", "path"],
+          "properties": {
+            "method": { "type": "string", "enum": ["GET"] },
+            "path": { "type": "string", "const": "/workspaces" },
+            "description": { "type": "string" }
+          }
+        },
+        "document_upload": {
+          "type": "object",
+          "required": ["method", "path_template"],
+          "properties": {
+            "method": { "type": "string", "enum": ["POST"] },
+            "path_template": { "type": "string", "pattern": "^/workspace/\\{[^}]+\\}/update-embeddings$" },
+            "description": { "type": "string" }
+          }
+        },
+        "chat": {
+          "type": "object",
+          "required": ["method", "path_template"],
+          "properties": {
+            "method": { "type": "string", "enum": ["POST"] },
+            "path_template": { "type": "string", "pattern": "^/workspace/\\{[^}]+\\}/chat$" },
+            "description": { "type": "string" }
+          }
+        }
+      }
+    },
+    "message_bus": {
+      "type": "object",
+      "properties": {
+        "bus_file": { "type": "string" },
+        "dlq_file": { "type": "string" },
+        "default_vector": { "type": "string" },
+        "default_performative": { "type": "string" }
+      }
+    },
+    "cli_flags": {
+      "type": "object",
+      "properties": {
+        "test": { "type": "boolean", "description": "Run diagnostic validation of local API connectivity" },
+        "sync_workspace": { "type": "boolean", "description": "Fetch active workspaces and post intake directives to message bus" },
+        "send_chat": { "type": "boolean", "description": "Package prompts into AnythingLLM chat payload format" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,4 +1,4 @@
-# PROJECT_SPEC — Discovery Engine (v3.7.0 / Phase 28)
+# PROJECT_SPEC — Discovery Engine (v3.8.0 / Phase 29)
 
 ## 1. Project Goal
 Zero-Budget Open-Source Autonomous Discovery Engine & Knowledge Graph Formalization.
@@ -9,6 +9,7 @@ Zero-Budget Open-Source Autonomous Discovery Engine & Knowledge Graph Formalizat
 - **CPU:** AMD Ryzen 5 5625U (6 cores / 12 threads)
 - **RAM:** 16 GB
 - **Inference:** CPU-bound Ollama (`qwen2.5-coder`, `llama3.1:8b`, `qwen2.5:7b`). No NVIDIA CUDA / Dedicated GPU.
+- **Gateway:** Local Ollama REST (`http://127.0.0.1:11434`), model fallback chain `qwen2.5-coder:14b` → `llama3.1:8b` → `qwen2.5:7b`, implemented in `00_Project_Interface/src/ollama_gateway.py` with liveness ping (`/api/tags`) and graceful offline fallback.
 - **Core Libraries:** NetworkX, SymPy, PyTorch (CPU-mode), Pure Python Fallback Engines.
 - **Budget Limit:** $0.00 (No external paid APIs, Vector DBs, or cloud services).
 
@@ -31,7 +32,7 @@ Zero-Budget Open-Source Autonomous Discovery Engine & Knowledge Graph Formalizat
 ## 6. Definition of Done (DoD)
 - [ ] All Python files pass `py_compile`.
 - [ ] Zero ungrounded or external dependencies.
-- [ ] `PROJECT_STATE.md` updated and synchronized to v3.7.0 / Phase 28.
+- [ ] `PROJECT_STATE.md` updated and synchronized to v3.8.0 / Phase 29.
 
 ---
 

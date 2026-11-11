@@ -2,7 +2,7 @@
 
 **Notebook Role:** Master Architect — Data Plane (Second Notebook of the Root Master Governance Pair)
 **Companion File:** `PROJECT_STATE.md` — Control Plane (Master Governance, Node Registry, System Metrics)
-**System Version:** v3.7.0 — Phase 28
+**System Version:** v3.8.0 — Phase 29
 **Date:** 2026-11-11
 **Budget:** $0.00 (Pure Open-Source & Local Hardware Stack)
 
@@ -114,4 +114,24 @@ Base URL: `http://127.0.0.1:3001/api/v1` (AnythingLLM local). Offline fallback (
 
 ---
 
-**End of PROJECT_CONTEXT.md — Master Architect Data Plane — v3.2.0**
+## 10. Ollama Gateway REST API Topology (v3.8.0)
+
+Local LLM inference is provided by the on-host Ollama server (`http://127.0.0.1:11434`), bound through `00_Project_Interface/src/ollama_gateway.py`.
+
+| Endpoint | Method | Path | Purpose |
+|----------|--------|------|---------|
+| Liveness / model list | GET | `/api/tags` | Ping Ollama server; enumerate installed models |
+| Inference | POST | `/api/generate` | Generate completion for a prompt on a specific model |
+
+| Setting | Value |
+|---------|-------|
+| Base URL | `http://127.0.0.1:11434` |
+| Model fallback chain | `qwen2.5-coder:14b` → `llama3.1:8b` → `qwen2.5:7b` |
+| Offline behaviour | Graceful fallback: `--test` completes with `exit_code: 0` even when the Ollama server is unreachable |
+| Budget | $0.00 (local CPU, no paid APIs) |
+
+Telemetry from each `--test` run is posted to the Universal Message Bus (`Bridge/messages.jsonl`) via `Bridge/bus_manager.py` (`log_core_telemetry`).
+
+---
+
+**End of PROJECT_CONTEXT.md — Master Architect Data Plane — v3.8.0**
