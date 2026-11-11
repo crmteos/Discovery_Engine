@@ -1,0 +1,11 @@
+{
+  "scheme_id": "SCHEME_001",
+  "title": "Conceptual Knowledge Network",
+  "keywords": ["osint", "graph", "topology"],
+  "concepts": [
+    {
+      "name": "Node_X",
+      "definition": "Formal definition of the concept"
+    }
+  ]
+}

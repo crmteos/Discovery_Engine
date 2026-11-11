@@ -1,0 +1,33 @@
+{
+  "video_id": "VID_001",
+  "source_path_or_url": "videos/lecture.mp4",
+  "title": "Topological Data Analysis",
+  "duration_seconds": 3600,
+  "temporal_chunks": [
+    {
+      "chunk_id": "c1",
+      "timestamp_start": "00:05:10",
+      "timestamp_end": "00:12:45",
+      "extracted_entities": [
+        "persistent_homology",
+        "betti_number_k"
+      ],
+      "visual_keys": [
+        "keyframe_005m10s.png"
+      ]
+    }
+  ],
+  "prov": {
+    "wasAttributedTo": "aggregator.osint_analyst",
+    "generatedAtTime": "2026-11-09T00:00:00Z",
+    "hadPrimarySource": "videos/lecture.mp4"
+  },
+  "confidence_score": 0.9,
+  "skos": {
+    "broader": "CS::VideoIndex",
+    "narrower": [],
+    "related": [
+      "CS::TopologicalDataAnalysis"
+    ]
+  }
+}

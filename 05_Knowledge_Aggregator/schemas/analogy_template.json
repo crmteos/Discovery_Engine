@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "05_Knowledge_Aggregator/schemas/analogy_template.json",
+  "title": "Analogy Template Schema",
+  "description": "Logic Spec-Driven contract for analogy payloads (aggregator.architect output).",
+  "type": "object",
+  "required": ["analogy_id", "source_domain", "target_domain", "mappings"],
+  "properties": {
+    "analogy_id": { "type": "string" },
+    "source_domain": { "type": "string" },
+    "target_domain": { "type": "string" },
+    "mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_element", "target_element", "relation_type"],
+        "properties": {
+          "source_element": { "type": "string" },
+          "target_element": { "type": "string" },
+          "relation_type": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

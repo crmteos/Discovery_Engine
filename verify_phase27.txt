@@ -1,0 +1,8 @@
+PY_COMPILE_FILES: 75
+PY_COMPILE_FAILED: ['_patch.py', '06_Formalized_Model\\src\\owl_export_validator.py', 'Bridge\\trash\\create_full.py', 'Bridge\\trash\\intake_processor.py', 'Bridge\\trash\\temp_check.py']
+MANIFEST_JSON: OK
+FILE_EXISTS_PROJECT_SPEC.md: True
+FILE_EXISTS_docs/STARTPOINT_META_PROMPT.md: True
+MESSAGE_msg_20261111_121119_FOUND: True
+MESSAGE_msg_20261111_121119_STATUS: completed
+MESSAGE_topic: directive:phase27

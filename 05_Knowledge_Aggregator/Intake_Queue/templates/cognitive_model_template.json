@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "model_name": "Sample_Cognitive_Model",
+    "author": "Knowledge_Aggregator_Architect",
+    "timestamp": "2026-11-08T00:00:00Z",
+    "source_notebook": "External_Cognitive_Notebook"
+  },
+  "entities": [
+    {
+      "id": "entity_001",
+      "name": "ConceptA",
+      "type": "AbstractConcept",
+      "properties": {"domain": "Cognition"}
+    }
+  ],
+  "relations": [
+    {
+      "subject": "entity_001",
+      "predicate": "influences",
+      "object": "entity_002"
+    }
+  ],
+  "invariants": [
+    "Conservation_Law_Or_Axiom_Expression"
+  ]
+}

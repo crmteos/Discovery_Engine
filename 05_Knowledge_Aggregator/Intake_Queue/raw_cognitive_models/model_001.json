@@ -1,0 +1,33 @@
+{
+  "type": "cognitive_model",
+  "version": "1.0",
+  "metadata": {
+    "model_name": "Sample_Model",
+    "author": "Test",
+    "timestamp": "2026-11-09T00:00:00Z",
+    "prov:wasAttributedTo": "aggregator.test_user",
+    "prov:generatedAtTime": "2026-11-09T00:00:00Z",
+    "prov:hadPrimarySource": "model_output.json"
+  },
+  "confidence_score": 0.95,
+  "entities": [
+    {
+      "id": "e1",
+      "name": "ConceptA",
+      "type": "AbstractConcept",
+      "properties": {
+        "domain": "Cognition"
+      }
+    }
+  ],
+  "relations": [
+    {
+      "subject": "e1",
+      "predicate": "relatedTo",
+      "object": "e2"
+    }
+  ],
+  "invariants": [
+    "Conservation_Law"
+  ]
+}

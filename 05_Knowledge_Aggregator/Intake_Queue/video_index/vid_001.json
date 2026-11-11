@@ -1,0 +1,28 @@
+{
+  "video_id": "V1",
+  "source_path_or_url": "vid.mp4",
+  "temporal_chunks": [
+    {
+      "chunk_id": "c1",
+      "timestamp_start": "00:00",
+      "timestamp_end": "01:00",
+      "extracted_entities": [
+        "e1"
+      ],
+      "visual_keys": [
+        "v1"
+      ]
+    }
+  ],
+  "prov": {
+    "wasAttributedTo": "agg",
+    "generatedAtTime": "2024-01-01T00:00:00Z",
+    "hadPrimarySource": "vid.mp4"
+  },
+  "skos": {
+    "broader": "b",
+    "related": [
+      "r"
+    ]
+  }
+}

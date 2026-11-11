@@ -1,0 +1,12 @@
+{
+  "analogy_id": "ANALOGY_001",
+  "source_domain": "Biological_Evolution",
+  "target_domain": "Software_Architecture",
+  "mappings": [
+    {
+      "source_element": "Mutation",
+      "target_element": "Code_Refactoring",
+      "relation_type": "StructuralIsomorphism"
+    }
+  ]
+}

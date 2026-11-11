@@ -1,0 +1,25 @@
+{
+  "type": "concept_scheme",
+  "version": "1.0",
+  "metadata": {
+    "model_name": "Test_Scheme"
+  },
+  "source_domain": "Test Domain",
+  "scheme_id": "SMOKE_SCHEME_001",
+  "title": "Smoke Test Concept Scheme",
+  "keywords": ["smoke", "ingestion", "validation"],
+  "confidence_score": 0.9,
+  "prov:wasAttributedTo": "aggregator.test_user",
+  "prov:generatedAtTime": "2026-11-09T00:00:00Z",
+  "prov:hadPrimarySource": "scheme_output.json",
+  "concepts": [
+    {
+      "name": "Ingestion_Gateway",
+      "definition": "A gateway that validates and normalizes incoming knowledge drafts"
+    }
+  ],
+  "skos:broader": "CS::TopLevel",
+  "skos:narrower": [],
+  "skos:related": ["Related_Concept"],
+  "skos:prefLabel": "Ingestion_Gateway"
+}

@@ -1,0 +1,28 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix core: <http://discovery.engine/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# SHACL shapes for the Formal Core universe ontology (v2.6.0).
+# Consumed by 01_Formal_Core/src/01_Formal_Ontologies/shacl_validator.py
+
+core:EntityShape a sh:NodeShape ;
+    sh:targetClass core:Entity ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 0 ;
+        sh:datatype xsd:string ;
+    ] .
+
+core:RelationShape a sh:NodeShape ;
+    sh:targetClass core:Relation ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+    ] .

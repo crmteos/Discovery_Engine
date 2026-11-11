@@ -1,0 +1,78 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix core: <http://discovery.engine/core#> .
+
+###############################################################################
+# Extended Universal Domain Ontology
+# Builds upon universe_base.ttl with invariant properties, domain projections,
+# and equivalence relations for noise-free cross-disciplinary entity mapping.
+###############################################################################
+
+# -----------------------------------------------------------------------------
+# Core Classes
+# -----------------------------------------------------------------------------
+
+core:Entity a owl:Class ;
+    rdfs:label "Universal Entity" ;
+    rdfs:comment "Abstract invariant object representing a concept, physical entity, or state." .
+
+core:InvariantProperty a owl:Class ;
+    rdfs:label "Invariant Property" ;
+    rdfs:comment "A mathematical or structural attribute invariant under coordinate transform." .
+
+core:DomainProjection a owl:Class ;
+    rdfs:label "Domain Projection" ;
+    rdfs:comment "A discipline-specific language view of a universal entity (e.g. Physics vs Economics description)." .
+
+# -----------------------------------------------------------------------------
+# Relations (Object Properties)
+# -----------------------------------------------------------------------------
+
+core:hasProjection a owl:ObjectProperty ;
+    rdfs:domain core:Entity ;
+    rdfs:range core:DomainProjection .
+
+core:hasInvariant a owl:ObjectProperty ;
+    rdfs:domain core:Entity ;
+    rdfs:range core:InvariantProperty .
+
+core:isEquivalentTo a owl:SymmetricProperty ;
+    rdfs:domain core:Entity ;
+    rdfs:range core:Entity .
+
+# -----------------------------------------------------------------------------
+# Inverse Properties
+# -----------------------------------------------------------------------------
+
+core:isProjectionOf a owl:ObjectProperty ;
+    owl:inverseOf core:hasProjection ;
+    rdfs:domain core:DomainProjection ;
+    rdfs:range core:Entity .
+
+core:isInvariantOf a owl:ObjectProperty ;
+    owl:inverseOf core:hasInvariant ;
+    rdfs:domain core:InvariantProperty ;
+    rdfs:range core:Entity .
+
+# -----------------------------------------------------------------------------
+# Datatype Properties
+# -----------------------------------------------------------------------------
+
+core:hasInvariantValue a owl:DatatypeProperty ;
+    rdfs:domain core:InvariantProperty ;
+    rdfs:range xsd:string .
+
+core:hasProjectionLabel a owl:DatatypeProperty ;
+    rdfs:domain core:DomainProjection ;
+    rdfs:range xsd:string .
+
+# -----------------------------------------------------------------------------
+# Class Axioms
+# -----------------------------------------------------------------------------
+
+core:Entity owl:equivalentClass [
+    a owl:Class ;
+    owl:unionOf (core:DomainProjection core:InvariantProperty)
+] .

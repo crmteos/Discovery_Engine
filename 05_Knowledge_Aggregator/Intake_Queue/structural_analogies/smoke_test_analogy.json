@@ -1,0 +1,22 @@
+{
+  "type": "analogy",
+  "version": "1.0",
+  "metadata": {
+    "model_name": "Test_Analogy"
+  },
+  "analogy_id": "SMOKE_ANALOGY_001",
+  "source_domain": "Linguistics",
+  "target_domain": "Knowledge_Graphs",
+  "mappings": [
+    {
+      "source_element": "Phoneme",
+      "target_element": "Node",
+      "relation_type": "StructuralIsomorphism"
+    },
+    {
+      "source_element": "Morpheme",
+      "target_element": "Edge",
+      "relation_type": "StructuralIsomorphism"
+    }
+  ]
+}

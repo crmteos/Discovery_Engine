@@ -1,0 +1,545 @@
+{
+  "system_name": "DiscoveryEngine_Pipeline",
+  "version": "3.5.0",
+  "architecture": "Dynamic_N_Tier_Actor_Pipeline_with_Universal_Message_Bus",
+  "isolation_standard": "Dynamic_N_Tier_Recursive_Isolation_v2.2.0",
+  "communication_protocol": "Universal_Transactional_JSONL_Message_Bus_v2.3.0",
+  "capability_standards": [
+    "Google_A2A_Protocol",
+    "Anthropic_MCP",
+    "Logic_Spec_Driven_Contracts"
+  ],
+  "formal_core_standards": {
+    "w3c_shacl": {
+      "enabled": true,
+      "schema_dir": "01_Formal_Core/schemas/shacl/"
+    },
+    "dspy_guardrails": {
+      "enabled": true,
+      "backtracking": true
+    },
+    "sympy_cas_prover": {
+      "enabled": true,
+      "canonical_simplification": true
+    },
+    "vietoris_rips_tda": {
+      "enabled": true,
+      "homology_dimensions": [
+        "H0",
+        "H1"
+      ]
+    },
+    "opentelemetry_genai": {
+      "enabled": true,
+      "telemetry_bus": "Bridge/messages.jsonl"
+    },
+    "prov_o": {
+      "enabled": true,
+      "spec": "W3C PROV-O",
+      "required_fields": [
+        "prov:wasAttributedTo",
+        "prov:generatedAtTime",
+        "prov:hadPrimarySource",
+        "confidence_score"
+      ]
+    },
+    "skos": {
+      "enabled": true,
+      "spec": "W3C SKOS",
+      "required_terms": [
+        "skos:broader",
+        "skos:narrower",
+        "skos:related",
+        "skos:prefLabel"
+      ]
+    },
+    "owl_2_dl": {
+      "enabled": true,
+      "spec": "W3C OWL 2 DL",
+      "description_logic": "SROIQ/ALCHI",
+      "conflict_checks": [
+        "owl:disjointWith",
+        "owl:equivalentClass"
+      ]
+    },
+    "iso_42010": {
+      "enabled": true,
+      "spec": "ISO/IEC/IEEE 42010",
+      "architectural_views": [
+        "structural",
+        "behavioral",
+        "parametric"
+      ]
+    },
+    "pure_python_engines": {
+      "rdf": "pure_rdf_engine.py",
+      "tda": "pure_tda_engine.py",
+      "symbolic": "pure_symbolic_engine.py"
+    }
+  },
+  "message_bus": "Bridge/messages.jsonl",
+  "bus_manager": "Bridge/bus_manager.py",
+  "storage_layout": {
+    "master_directive_input_dir": "Bridge/in/",
+    "master_directive_input_dir_deprecated": "Bridge/in/core/",
+    "trash_bin_dir": "Bridge/trash/",
+    "execution_reports_dir": "Bridge/out/execution_reports/",
+    "aggregator_reports_dir": "Bridge/out/aggregator_reports/",
+    "master_architect_artifacts": [
+      "PROJECT_STATE.md",
+      "PROJECT_CONTEXT.md"
+    ],
+    "adr_dir": "docs/adr/",
+    "tests_dir": "tests/",
+    "scripts_dir": "scripts/",
+    "pyproject_toml": "pyproject.toml"
+  },
+  "role_capability_registry": {
+    "interface.operator": {
+      "a2a_agent_card": {
+        "role_id": "interface.operator",
+        "name": "Interface Operator",
+        "description": "Оператор інформаційно-інтерфейсного вузла: огляд робочої області, звітність про виконання, візуалізація архітектури.",
+        "allowed_vectors": [
+          "interface_to_master",
+          "interface_to_bus",
+          "interface_to_nodes",
+          "interface_to_anythingllm"
+        ],
+        "subscriptions": [
+          "*"
+        ]
+      },
+      "mcp_spec": {
+        "workspace_dir": ".",
+        "tools": [
+          "00_Project_Interface/src/architecture_view.py",
+          "00_Project_Interface/src/context_view.py",
+          "00_Project_Interface/src/anythingllm_gateway.py",
+          "00_Project_Interface/src/visualizers/executive_dashboard.py",
+          "00_Project_Interface/src/visualizers/timeline_visualizer.py",
+          "00_Project_Interface/src/visualizers/rdf_graph_visualizer.py",
+          "00_Project_Interface/src/visualizers/tda_gap_visualizer.py",
+          "00_Project_Interface/src/visualizers/iso42010_visualizer.py",
+          "00_Project_Interface/src/visualizers/adr_matrix_visualizer.py"
+        ],
+        "context_resources": [
+          "system_manifest.json",
+          "PROJECT_STATE.md",
+          "Bridge/messages.jsonl"
+        ]
+      },
+      "logic_spec_contracts": {
+        "input_schema": "00_Project_Interface/schemas/anythingllm_gateway_schema.json",
+        "output_schema": null
+      }
+    },
+    "system.master_architect": {
+      "a2a_agent_card": {
+        "role_id": "system.master_architect",
+        "name": "Master System Architect",
+        "description": "Головний системний архітектор (Перший Блокнот / Ядро)",
+        "allowed_vectors": [
+          "vertical",
+          "horizontal",
+          "diagonal"
+        ],
+        "subscriptions": [
+          "hypothesis_submission",
+          "status_update",
+          "error_report"
+        ]
+      },
+      "mcp_spec": {
+        "workspace_dir": ".",
+        "tools": [
+          "system_manifest.json",
+          "PROJECT_STATE.md",
+          "PROJECT_CONTEXT.md"
+        ],
+        "context_resources": [
+          "PROJECT_STATE.md",
+          "PROJECT_CONTEXT.md"
+        ]
+      },
+      "logic_spec_contracts": {
+        "input_schema": "05_Knowledge_Aggregator/schemas/concept_scheme_template.json",
+        "output_schema": null
+      }
+    },
+    "aggregator.architect": {
+      "a2a_agent_card": {
+        "role_id": "aggregator.architect",
+        "name": "Knowledge Aggregator Architect",
+        "description": "ШІ-Архітектор Агрегатора Знань (Другий Блокнот)",
+        "allowed_vectors": [
+          "vertical",
+          "horizontal",
+          "diagonal"
+        ],
+        "subscriptions": [
+          "task_request",
+          "data_clarification"
+        ]
+      },
+      "mcp_spec": {
+        "workspace_dir": "05_Knowledge_Aggregator/",
+        "tools": [
+          "05_Knowledge_Aggregator/src/intake_processor.py",
+          "05_Knowledge_Aggregator/schema_validator.py"
+        ],
+        "context_resources": [
+          "05_Knowledge_Aggregator/INSTRUCTIONS_ROLE_ARCHITECT.md",
+          "05_Knowledge_Aggregator/AGGREGATOR_OPERATIONAL_PROTOCOL.md"
+        ]
+      },
+      "logic_spec_contracts": {
+        "input_schema": "05_Knowledge_Aggregator/schemas/cognitive_model_template.json",
+        "output_schema": "05_Knowledge_Aggregator/schemas/analogy_template.json"
+      }
+    },
+    "aggregator.osint_analyst": {
+      "a2a_agent_card": {
+        "role_id": "aggregator.osint_analyst",
+        "name": "OSINT Analyst",
+        "description": "Аналітик відкритих джерел (OSINT) — нормалізація та агрегація зовнішніх потоків даних",
+        "allowed_vectors": [
+          "vertical",
+          "horizontal",
+          "diagonal"
+        ],
+        "subscriptions": [
+          "task_request",
+          "data_clarification",
+          "hypothesis_submission"
+        ]
+      },
+      "mcp_spec": {
+        "workspace_dir": "05_Knowledge_Aggregator/",
+        "tools": [
+          "05_Knowledge_Aggregator/src/intake_processor.py",
+          "05_Knowledge_Aggregator/schema_validator.py"
+        ],
+        "context_resources": [
+          "05_Knowledge_Aggregator/AGGREGATOR_OPERATIONAL_PROTOCOL.md",
+          "05_Knowledge_Aggregator/AGGREGATOR_STATE.md"
+        ]
+      },
+      "logic_spec_contracts": {
+        "input_schema": "05_Knowledge_Aggregator/schemas/cognitive_model_template.json",
+        "output_schema": null
+      }
+    },
+    "core.tda_engineer": {
+      "a2a_agent_card": {
+        "role_id": "core.tda_engineer",
+        "name": "Topological Data Analysis Engineer",
+        "description": "Інженер топологічного аналізу даних та виявлення прогалин",
+        "allowed_vectors": [
+          "horizontal",
+          "diagonal"
+        ],
+        "subscriptions": [
+          "task_request",
+          "data_clarification"
+        ]
+      },
+      "mcp_spec": {
+        "workspace_dir": "01_Formal_Core/src/04_Discovery_Engine/",
+        "tools": [
+          "01_Formal_Core/src/04_Discovery_Engine/Topological_Data_Analysis/tda_gap_finder.py",
+          "01_Formal_Core/src/04_Discovery_Engine/Novelty_Detectors/novelty_detector.py"
+        ],
+        "context_resources": [
+          "01_Formal_Core/INSTRUCTIONS_ROLE.md"
+        ]
+      },
+      "logic_spec_contracts": {
+        "input_schema": "05_Knowledge_Aggregator/schemas/cognitive_model_template.json",
+        "output_schema": null
+      }
+    },
+    "model.builder": {
+      "a2a_agent_card": {
+        "role_id": "model.builder",
+        "name": "Target Model Builder",
+        "description": "Інженер побудови підсумкової заземленої ШІ-моделі (Третій Блокнот)",
+        "allowed_vectors": [
+          "vertical",
+          "horizontal",
+          "diagonal"
+        ],
+        "subscriptions": [
+          "task_request",
+          "validation_response"
+        ]
+      },
+      "mcp_spec": {
+        "workspace_dir": "06_Formalized_Model/",
+        "tools": [
+          "06_Formalized_Model/src/"
+        ],
+        "context_resources": [
+          "06_Formalized_Model/INSTRUCTIONS_ROLE_MODEL.md"
+        ]
+      },
+      "logic_spec_contracts": {
+        "input_schema": "05_Knowledge_Aggregator/schemas/cognitive_model_template.json",
+        "output_schema": null
+      }
+    },
+    "cline.executor": {
+      "a2a_agent_card": {
+        "role_id": "cline.executor",
+        "name": "Cline Execution Engineer",
+        "description": "Локальний виконавець команд на ПК",
+        "allowed_vectors": [
+          "vertical",
+          "horizontal",
+          "diagonal"
+        ],
+        "subscriptions": [
+          "*"
+        ]
+      },
+      "mcp_spec": {
+        "workspace_dir": ".",
+        "tools": [
+          "Bridge/bus_manager.py",
+          "05_Knowledge_Aggregator/schema_validator.py",
+          "test_e2e_pipeline.py"
+        ],
+        "context_resources": [
+          "PROJECT_STATE.md"
+        ]
+      },
+      "logic_spec_contracts": {
+        "input_schema": null,
+        "output_schema": null
+      }
+    }
+  },
+  "governance": {
+    "budget_limit": 0.0,
+    "execution_mode": "Stateless_Autonomous_Sessions",
+    "validation": "Strict_Contract_First",
+    "cline_nesting_prerogative": "Cline may create arbitrary N-level nesting for sub-modules and nodes; each level must preserve the Unified Node Envelope (bridge/in, bridge/out, schemas, src)",
+    "notebook_context_standard": {
+      "rule_id": "notebook_context_standard",
+      "version": "2.9.2",
+      "description": "Strict 2-file notebook context standard across all nodes (Node 00, 01, 05, 06).",
+      "master_architect_root_notebook": {
+        "files": [
+          "PROJECT_STATE.md",
+          "PROJECT_CONTEXT.md"
+        ],
+        "count": 2,
+        "description": "Master Architect (Root Notebook): 2-file Dual-Vertical Standard — PROJECT_STATE.md (Control Plane) + PROJECT_CONTEXT.md (Data Plane)."
+      },
+      "node_orchestrators": {
+        "nodes": [
+          "node_00_project_interface",
+          "node_01_core",
+          "node_05_aggregator",
+          "node_06_target_model"
+        ],
+        "count": 2,
+        "files": [
+          "NOTEBOOK_PASSPORT_[NODE].md — Architectural Interface (Control Plane)",
+          "CONTEXT_DOMAIN_[NODE].md — Contextual Data Domain (Data Plane)"
+        ],
+        "description": "Node Orchestrators (Nodes 00, 01, 05, 06): exactly 2 files per notebook."
+      }
+    }
+  },
+  "system_governance": {
+    "trash_bin_policy": {
+      "policy_id": "trash_bin_policy",
+      "version": "2.9.2",
+      "description": "Non-destructive file lifecycle management: all deprecated/executed directives, temporary scripts, and outdated/broken JSONs are moved to Bridge/trash/ instead of hard deletion (rm/unlink).",
+      "trash_bin_dir": "Bridge/trash/",
+      "applies_to": [
+        "executed directives (Phase 18, 19, 20, 20.1)",
+        "temporary Python scripts",
+        "broken/outdated JSON drafts"
+      ],
+      "enforced": true
+    },
+    "single_prompt_gateway_protocol": {
+      "protocol_id": "single_prompt_gateway_protocol",
+      "version": "2.9.2",
+      "description": "4-step Single-Prompt Gateway Protocol (Gemini Directive → User Save → Single Prompt in Cline VS Code → Bus Completion & Report Return).",
+      "steps": [
+        {
+          "step": 1,
+          "actor": "Architect (system.master_architect)",
+          "action": "Generates directive-phaseXX-vX.Y.Z.md in Studio."
+        },
+        {
+          "step": 2,
+          "actor": "Gateway Operator (user.operator)",
+          "action": "Saves directive to Bridge/in/directive-phaseXX-vX.Y.Z.md."
+        },
+        {
+          "step": 3,
+          "actor": "Gateway Operator / Cline (cline.executor)",
+          "action": "Executes Single-Prompt in Cline session: runs bus_manager.py --post via --payload-file, then executes the task."
+        },
+        {
+          "step": 4,
+          "actor": "Cline (cline.executor)",
+          "action": "Executes, updates message status to completed, saves execution report to Bridge/out/execution_reports/, and returns summary."
+        }
+      ]
+    }
+  },
+  "resilience_governance": {
+    "dlq": {
+      "file": "Bridge/messages_dlq.jsonl",
+      "policy": "permanent_contract_violation_triage",
+      "record_fields": [
+        "dlq_id",
+        "timestamp",
+        "dlq_reason",
+        "error_type",
+        "original_record"
+      ]
+    },
+    "idempotency": {
+      "store": "Bridge/.idempotency_store.json",
+      "key_formula": "sha256(sender + task_id + action_type)",
+      "dedup_behavior": "block_side_effect_and_return_cached_result"
+    },
+    "circuit_breakers": {
+      "max_hops": 3,
+      "hop_counter_field": "hop_count",
+      "trip_status": "circuit_broken",
+      "operator_notification": true
+    },
+    "semantic_gates": {
+      "engines": [
+        "NetworkX",
+        "SymPy"
+      ],
+      "checks": [
+        "graph_weak_connectivity",
+        "graph_acyclicity",
+        "logic_assertion_consistency"
+      ]
+    },
+    "hitl": {
+      "performative": "human_approval_required",
+      "awaiting_status": "awaiting_human_approval",
+      "approval_channel": "Bridge/messages.jsonl (user.operator confirmation record)"
+    }
+  },
+  "nodes": {
+    "node_00_project_interface": {
+      "name": "Project Interface Dashboard",
+      "path": "00_Project_Interface/",
+      "roles": {
+        "interface.operator": "Огляд робочої області, звіти про виконання, архітектурна візуалізація"
+      },
+      "envelope": {
+        "schemas": "00_Project_Interface/schemas/",
+        "src": "00_Project_Interface/src/",
+        "control_plane": "00_Project_Interface/NOTEBOOK_PASSPORT_INTERFACE.md",
+        "data_plane": "00_Project_Interface/CONTEXT_DOMAIN_INTERFACE.md"
+      },
+      "sub_components": {
+        "control_plane": "00_Project_Interface/NOTEBOOK_PASSPORT_INTERFACE.md",
+        "data_plane": "00_Project_Interface/CONTEXT_DOMAIN_INTERFACE.md"
+      },
+      "canonical_interfaces": [
+        "00_Project_Interface/NOTEBOOK_PASSPORT_INTERFACE.md",
+        "00_Project_Interface/CONTEXT_DOMAIN_INTERFACE.md"
+      ],
+      "notebook_context_standard": "2-file (NOTEBOOK_PASSPORT_ + CONTEXT_DOMAIN_)",
+      "status": "🟢 Active"
+    },
+    "node_05_aggregator": {
+      "name": "Knowledge Aggregator",
+      "path": "05_Knowledge_Aggregator/",
+      "roles": {
+        "aggregator.architect": "Формування когнітивних моделей та метафор",
+        "aggregator.orchestrator": "Агрегація OSINT-потоків та первинна нормалізація"
+      },
+      "envelope": {
+        "schemas": "05_Knowledge_Aggregator/schemas/",
+        "src": "05_Knowledge_Aggregator/src/"
+      },
+      "sub_components": {
+        "control_plane": "05_Knowledge_Aggregator/NOTEBOOK_PASSPORT_AGGREGATOR.md",
+        "data_plane": "05_Knowledge_Aggregator/CONTEXT_DOMAIN_AGGREGATOR.md",
+        "pure_rdf_engine": "05_Knowledge_Aggregator/src/pure_rdf_engine.py"
+      },
+      "canonical_interfaces": [
+        "05_Knowledge_Aggregator/NOTEBOOK_PASSPORT_AGGREGATOR.md",
+        "05_Knowledge_Aggregator/CONTEXT_DOMAIN_AGGREGATOR.md"
+      ],
+      "status": "🟢 Active",
+      "notebook_context_standard": "2-file (NOTEBOOK_PASSPORT_ + CONTEXT_DOMAIN_)"
+    },
+    "node_01_core": {
+      "name": "Formal Core & Discovery Engine",
+      "path": "01_Formal_Core/",
+      "roles": {
+        "core.formal_engineer": "Онтології RDF/OWL та графі знань",
+        "core.bridge_engineer": "DSPy сигнатури та перевірка галюцинацій",
+        "core.tda_engineer": "Топологічний аналіз та виявлення прогалин"
+      },
+      "envelope": {
+        "schemas": "01_Formal_Core/src/01_Formal_Ontologies/",
+        "src": "01_Formal_Core/src/"
+      },
+      "sub_components": {
+        "formal_ontologies": "01_Formal_Core/src/01_Formal_Ontologies/",
+        "knowledge_graphs": "01_Formal_Core/src/Knowledge_Graphs/",
+        "symbolic_ai": "01_Formal_Core/src/Symbolic_AI/",
+        "neuro_symbolic_bridge": "01_Formal_Core/src/02_NeuroSymbolic_Bridge/",
+        "multimodal_interface": "01_Formal_Core/src/03_Multimodal_Interface/",
+        "discovery_engine": "01_Formal_Core/src/04_Discovery_Engine/",
+        "pure_tda_engine": "01_Formal_Core/src/pure_tda_engine.py",
+        "pure_symbolic_engine": "04_Discovery_Engine/src/pure_symbolic_engine.py",
+        "pure_rdf_engine": "05_Knowledge_Aggregator/src/pure_rdf_engine.py"
+      }
+    },
+    "node_06_target_model": {
+      "name": "Formalized AI Target Model",
+      "path": "06_Formalized_Model/",
+      "roles": {
+        "model.builder": "Збірка математично заземленої когнітивної моделі",
+        "model.validator": "Перевірка цілісності підсумкової моделі"
+      },
+      "envelope": {
+        "schemas": "06_Formalized_Model/schemas/",
+        "src": "06_Formalized_Model/src/"
+      }
+    },
+    "node_04_discovery_engine": {
+      "name": "Discovery Engine",
+      "path": "01_Formal_Core/src/04_Discovery_Engine/",
+      "roles": {
+        "discovery.tda_engineer": "Vietoris-Rips TDA & Betti H0/H1 engine",
+        "discovery.symbolic_engineer": "AST/SymPy symbolic regression engine"
+      },
+      "envelope": {
+        "schemas": "01_Formal_Core/src/01_Formal_Ontologies/",
+        "src": "01_Formal_Core/src/"
+      },
+      "sub_components": {
+        "symbolic_ai": "01_Formal_Core/src/Symbolic_AI/",
+        "discovery_engine": "01_Formal_Core/src/04_Discovery_Engine/",
+        "topological_data_analysis": "01_Formal_Core/src/04_Discovery_Engine/Topological_Data_Analysis/",
+        "symbolic_regression": "01_Formal_Core/src/04_Discovery_Engine/Symbolic_Regression/",
+        "pure_symbolic_engine": "04_Discovery_Engine/src/pure_symbolic_engine.py"
+      }
+    }
+  },
+  "node_interaction_rules": {
+    "aggregator_isolation": "Node 05 roles (Architect, OSINT_Orchestrator) communicate exclusively via the universal transactional Message Bus (Bridge/bus_manager.py & Bridge/messages.jsonl); node-local bridge/in and bridge/out bindings are removed.",
+    "core_exposure": "Node 01 exposes formal ontology contracts via 01_Formal_Core/src/01_Formal_Ontologies/; all core sub-module code is encapsulated under 01_Formal_Core/src/.",
+    "target_model_build": "Node 06 synthesizes the mathematically grounded target model from validated triples and reports via the universal Message Bus (Bridge/bus_manager.py); node-local bridge/out bindings are removed.",
+    "cross_node_import": "Cross-node Python imports are permitted only via manifest-registered paths under 01_Formal_Core/src/"
+  }
+}

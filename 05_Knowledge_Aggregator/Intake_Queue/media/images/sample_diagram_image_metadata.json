@@ -1,0 +1,28 @@
+{
+  "image_id": "sample_diagram",
+  "source_path_or_url": "05_Knowledge_Aggregator/Intake_Queue/media/images/sample_diagram.png",
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "format": "PNG",
+  "extracted_concepts": [
+    {
+      "concept_name": "VISUAL_ENTITY_SAMPLE_DIAGRAM",
+      "definition": "Key structural element extracted from image diagram",
+      "bounding_box": [100, 150, 1820, 930]
+    }
+  ],
+  "visual_keys": ["legend_symbol_png"],
+  "prov": {
+    "wasAttributedTo": "aggregator.architect",
+    "generatedAtTime": "2026-11-09T11:30:00Z",
+    "hadPrimarySource": "05_Knowledge_Aggregator/Intake_Queue/media/images/sample_diagram.png"
+  },
+  "confidence_score": 0.95,
+  "skos": {
+    "broader": "CS::VisualData::v1",
+    "narrower": [],
+    "related": ["CS::DiagramAnalysis::v1"]
+  }
+}

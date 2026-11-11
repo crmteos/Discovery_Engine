@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "05_Knowledge_Aggregator/schemas/cognitive_model_template.json",
+  "title": "Cognitive Model Template Schema",
+  "description": "Logic Spec-Driven contract for cognitive model payloads (aggregator.architect, core.tda_engineer, model.builder input).",
+  "type": "object",
+  "required": ["metadata", "entities", "relations", "invariants"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["model_name", "author", "timestamp"],
+      "properties": {
+        "model_name": { "type": "string" },
+        "author": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "source_notebook": { "type": "string" }
+      }
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "properties": { "type": "object" }
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["subject", "predicate", "object"],
+        "properties": {
+          "subject": { "type": "string" },
+          "predicate": { "type": "string" },
+          "object": { "type": "string" }
+        }
+      }
+    },
+    "invariants": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

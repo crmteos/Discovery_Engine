@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "required": [
+    "structural_view",
+    "behavioral_view",
+    "parametric_view",
+    "metadata"
+  ],
+  "properties": {
+    "structural_view": {
+      "type": "object"
+    },
+    "behavioral_view": {
+      "type": "object"
+    },
+    "parametric_view": {
+      "type": "object"
+    },
+    "metadata": {
+      "type": "object"
+    }
+  }
+}

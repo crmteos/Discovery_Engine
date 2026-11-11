@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1920" height="1080" fill="white"/>
+  <circle cx="960" cy="540" r="100" fill="blue"/>
+  <text x="960" y="540" font-family="Arial" font-size="24" fill="white">Sample Diagram</text>
+</svg>

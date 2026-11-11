@@ -1,0 +1,22 @@
+{
+  "status": "NORMALIZED",
+  "category": "structural_analogies",
+  "source": "C:\\Users\\crmte\\OneDrive\\Desktop\\Projects\\Discovery_Engine\\05_Knowledge_Aggregator\\Intake_Queue\\structural_analogies\\smoke_test_analogy.json",
+  "payload": {
+    "analogy_id": "SMOKE_ANALOGY_001",
+    "source_domain": "Linguistics",
+    "target_domain": "Knowledge_Graphs",
+    "mappings": [
+      {
+        "source_element": "Phoneme",
+        "target_element": "Node",
+        "relation_type": "StructuralIsomorphism"
+      },
+      {
+        "source_element": "Morpheme",
+        "target_element": "Edge",
+        "relation_type": "StructuralIsomorphism"
+      }
+    ]
+  }
+}

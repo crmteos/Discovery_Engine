@@ -1,0 +1,59 @@
+{
+  "video_id": "sample_lecture",
+  "source_path_or_url": "05_Knowledge_Aggregator/Intake_Queue/media/videos/sample_lecture.mp4",
+  "title": "Sample Lecture Video",
+  "duration_seconds": 3600,
+  "temporal_chunks": [
+    {
+      "chunk_id": "chunk_001",
+      "timestamp_start": "00:00:00",
+      "timestamp_end": "01:00:00",
+      "transcript_segment": "Discussion segment 1 — placeholder transcript text.",
+      "extracted_entities": ["entity_1"],
+      "visual_keys": ["keyframe_001m00s.png"]
+    },
+    {
+      "chunk_id": "chunk_002",
+      "timestamp_start": "01:00:00",
+      "timestamp_end": "02:00:00",
+      "transcript_segment": "Discussion segment 2 — placeholder transcript text.",
+      "extracted_entities": ["entity_2"],
+      "visual_keys": ["keyframe_002m00s.png"]
+    },
+    {
+      "chunk_id": "chunk_003",
+      "timestamp_start": "02:00:00",
+      "timestamp_end": "03:00:00",
+      "transcript_segment": "Discussion segment 3 — placeholder transcript text.",
+      "extracted_entities": ["entity_3"],
+      "visual_keys": ["keyframe_003m00s.png"]
+    },
+    {
+      "chunk_id": "chunk_004",
+      "timestamp_start": "03:00:00",
+      "timestamp_end": "04:00:00",
+      "transcript_segment": "Discussion segment 4 — placeholder transcript text.",
+      "extracted_entities": ["entity_4"],
+      "visual_keys": ["keyframe_004m00s.png"]
+    },
+    {
+      "chunk_id": "chunk_005",
+      "timestamp_start": "04:00:00",
+      "timestamp_end": "05:00:00",
+      "transcript_segment": "Discussion segment 5 — placeholder transcript text.",
+      "extracted_entities": ["entity_5"],
+      "visual_keys": ["keyframe_005m00s.png"]
+    }
+  ],
+  "prov": {
+    "wasAttributedTo": "aggregator.architect",
+    "generatedAtTime": "2026-11-09T11:30:00Z",
+    "hadPrimarySource": "05_Knowledge_Aggregator/Intake_Queue/media/videos/sample_lecture.mp4"
+  },
+  "confidence_score": 0.90,
+  "skos": {
+    "broader": "CS::VideoIndex::v1",
+    "narrower": [],
+    "related": ["CS::TopologicalDataAnalysis::v1"]
+  }
+}

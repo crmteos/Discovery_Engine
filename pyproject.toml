@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "discovery-engine"
+version = "3.0.0"
+description = "Discovery Engine — topological data analysis and formalized model pipeline"
+requires-python = ">=3.12"
+dependencies = [
+    "networkx",
+    "sympy",
+    "rdflib",
+    "dspy-ai",
+    "torch",
+    "requests",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

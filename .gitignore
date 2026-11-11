@@ -1,0 +1,18 @@
+# Virtual environments
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Local LLM & RAG data
+*.vectorindex
+*.db
+*.sqlite
+
+# Bridge temporary logs
+Bridge/out/temp_*
+
+# IDE & System
+.vscode/
+.DS_Store
+Thumbs.db

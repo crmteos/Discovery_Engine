@@ -1,0 +1,34 @@
+{
+  "video_id": "VID_INDEX_001",
+  "source_path_or_url": "C:\\Media\\Lectures\\Topology_Lecture_01.mp4",
+  "title": "Topological Data Analysis Foundations",
+  "duration_seconds": 3600,
+  "temporal_chunks": [
+    {
+      "chunk_id": "chunk_001",
+      "timestamp_start": "00:05:10",
+      "timestamp_end": "00:12:45",
+      "transcript_segment": "Discussion of persistent homology and Betti numbers...",
+      "extracted_entities": [
+        "persistent_homology",
+        "betti_number_k"
+      ],
+      "visual_keys": [
+        "keyframe_005m10s.png"
+      ]
+    }
+  ],
+  "prov": {
+    "wasAttributedTo": "aggregator.osint_analyst",
+    "generatedAtTime": "2026-11-08T23:30:00Z",
+    "hadPrimarySource": "C:\\Media\\Lectures\\Topology_Lecture_01.mp4"
+  },
+  "confidence_score": 0.90,
+  "skos": {
+    "broader": "CS::VideoIndex::v1",
+    "narrower": [],
+    "related": [
+      "CS::TopologicalDataAnalysis::v1"
+    ]
+  }
+}

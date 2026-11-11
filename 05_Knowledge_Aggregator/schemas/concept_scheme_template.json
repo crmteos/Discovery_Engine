@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "05_Knowledge_Aggregator/schemas/concept_scheme_template.json",
+  "title": "Concept Scheme Template Schema",
+  "description": "Logic Spec-Driven contract for concept scheme payloads (system.master_architect input).",
+  "type": "object",
+  "required": ["scheme_id", "title", "keywords", "concepts"],
+  "properties": {
+    "scheme_id": { "type": "string" },
+    "title": { "type": "string" },
+    "keywords": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "concepts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "definition"],
+        "properties": {
+          "name": { "type": "string" },
+          "definition": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

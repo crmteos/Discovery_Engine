@@ -1,0 +1,33 @@
+{
+  "image_id": "IMG_001",
+  "source_path_or_url": "images/diagram.png",
+  "extracted_concepts": [
+    {
+      "concept_name": "VisualEntity",
+      "definition": "A visual element",
+      "bounding_box": [
+        100,
+        150,
+        400,
+        350
+      ]
+    }
+  ],
+  "visual_keys": [
+    "key1",
+    "key2"
+  ],
+  "prov": {
+    "wasAttributedTo": "aggregator.osint_analyst",
+    "generatedAtTime": "2026-11-09T00:00:00Z",
+    "hadPrimarySource": "images/diagram.png"
+  },
+  "confidence_score": 0.95,
+  "skos": {
+    "broader": "CS::Visual",
+    "narrower": [],
+    "related": [
+      "CS::Diagram"
+    ]
+  }
+}

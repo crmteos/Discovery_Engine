@@ -1,0 +1,20 @@
+{
+  "status": "NORMALIZED",
+  "category": "conceptual_schemes",
+  "source": "C:\\Users\\crmte\\OneDrive\\Desktop\\Projects\\Discovery_Engine\\05_Knowledge_Aggregator\\Intake_Queue\\conceptual_schemes\\smoke_test_concept_scheme.json",
+  "payload": {
+    "scheme_id": "SMOKE_SCHEME_001",
+    "title": "Smoke Test Concept Scheme",
+    "keywords": [
+      "smoke",
+      "ingestion",
+      "validation"
+    ],
+    "concepts": [
+      {
+        "name": "Ingestion_Gateway",
+        "definition": "A gateway that validates and normalizes incoming knowledge drafts."
+      }
+    ]
+  }
+}

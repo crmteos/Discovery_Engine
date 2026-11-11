@@ -1,0 +1,41 @@
+{
+  "status": "NORMALIZED",
+  "category": "raw_cognitive_models",
+  "source": "C:\\Users\\crmte\\OneDrive\\Desktop\\Projects\\Discovery_Engine\\05_Knowledge_Aggregator\\Intake_Queue\\raw_cognitive_models\\smoke_test_cognitive_model.json",
+  "payload": {
+    "metadata": {
+      "model_name": "Smoke_Test_Cognitive_Model",
+      "author": "Cline_Smoke_Test",
+      "timestamp": "2026-11-08T10:00:00Z",
+      "source_notebook": "Smoke_Test_Notebook"
+    },
+    "entities": [
+      {
+        "id": "entity_001",
+        "name": "Knowledge_Node",
+        "type": "AbstractConcept",
+        "properties": {
+          "domain": "Ingestion"
+        }
+      },
+      {
+        "id": "entity_002",
+        "name": "Triple_Store",
+        "type": "ConcreteConcept",
+        "properties": {
+          "domain": "Storage"
+        }
+      }
+    ],
+    "relations": [
+      {
+        "subject": "entity_001",
+        "predicate": "populates",
+        "object": "entity_002"
+      }
+    ],
+    "invariants": [
+      "Every entity must have a unique id"
+    ]
+  }
+}

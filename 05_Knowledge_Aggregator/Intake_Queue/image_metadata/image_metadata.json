@@ -1,0 +1,33 @@
+{
+  "image_id": "IMG_001",
+  "source_path_or_url": "Intake_Queue/media/images/sample_diagram.png",
+  "extracted_concepts": [
+    {
+      "concept_name": "Visual_Entity_Alpha",
+      "definition": "Key structural element extracted from image diagram",
+      "bounding_box": [
+        100,
+        150,
+        400,
+        350
+      ]
+    }
+  ],
+  "visual_keys": [
+    "legend_symbol_01",
+    "flowchart_node_beta"
+  ],
+  "prov": {
+    "wasAttributedTo": "aggregator.osint_analyst",
+    "generatedAtTime": "2026-11-08T23:30:00Z",
+    "hadPrimarySource": "05_Knowledge_Aggregator/Intake_Queue/media/images/sample_diagram.png"
+  },
+  "confidence_score": 0.95,
+  "skos": {
+    "broader": "CS::VisualData::v1",
+    "narrower": [],
+    "related": [
+      "CS::DiagramAnalysis::v1"
+    ]
+  }
+}
