@@ -2,7 +2,7 @@
 
 **Notebook Role:** Master Architect — Data Plane (Second Notebook of the Root Master Governance Pair)
 **Companion File:** `PROJECT_STATE.md` — Control Plane (Master Governance, Node Registry, System Metrics)
-**System Version:** v4.2.0 / Phase 33
+**System Version:** v4.3.0 / Phase 34
 **Date:** 2026-11-11
 **Budget:** $0.00 (Pure Open-Source & Local Hardware Stack)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_CONTEXT.md
@@ -136,4 +136,40 @@ Telemetry from each `--test` run is posted to the Universal Message Bus (`Bridge
 
 ---
 
-**End of PROJECT_CONTEXT.md — Master Architect Data Plane — v4.0.0**
+## 11. OSINT Search & AI Grounding Intake Topology & Flow (v4.3.0 / Phase 34)
+
+**Purpose:** This section documents the OSINT Search & AI Grounding Intake Adapter implementation in Node 05 Knowledge Aggregator (`05_Knowledge_Aggregator/src/search_intake_adapter.py`). This adapter enables zero-cost web search integration, draft generation with structured metadata, and graceful offline fallback.
+
+**Adapter Specifications:**
+- **Role:** `aggregator.osint_analyst`
+- **Search Method:** DuckDuckGo HTML API (zero-cost, no API keys required)
+- **Output Drafts:** JSON intake drafts written to `Intake_Queue/drafts/` containing query, results with titles/URLs/snippets, generation timestamp, and metadata
+- **Metadata Automatic Addition:** `prov:wasDerivedFrom` (source URL) and `skos:Concept` (prefLabel, altLabels, definition) added to all drafts
+- **LLM Triplet Extraction:** Optional triplet extraction via `intake_processor.py` `--llm-extract` mode using specified Ollama model
+- **Offline Fallback:** If internet unavailable or search API returns error/rate-limit (HTTP 429), gracefully falls back to processing pre-existing `Intake_Queue/drafts/` without raising uncaught exceptions (`exit_code: 0` with diagnostic warning)
+
+**Data Flow:**
+```
+aggregator.osint_analyst query
+        ↓
+search_intake_adapter.py (search_duckduckgo)
+        ↓
+generate_intake_draft() → JSON draft with metadata
+        ↓
+write_draft_to_disk() → Intake_Queue/drafts/
+        ↓
+intake_processor.py --llm-extract → RDF triple normalization with prov:wasDerivedFrom & skos:Concept
+        ↓
+Processed_Gate/normalized_triples/
+```
+
+**Related Files:**
+- `05_Knowledge_Aggregator/src/search_intake_adapter.py` — Main adapter implementation
+- `05_Knowledge_Aggregator/src/intake_processor.py` — Triple normalization (--llm-extract mode)
+- `00_Project_Interface/src/ollama_gateway.py` — Ollama gateway for LLM extraction
+- `tests/integration/test_search_intake_adapter.py` — Integration tests
+- `Intake_Queue/drafts/` — Generated draft directory
+
+**DoD Reference:** Synchronized to v4.3.0 / Phase 34 memory triad.
+
+**End of PROJECT_CONTEXT.md — Master Architect Data Plane — v4.3.0**
