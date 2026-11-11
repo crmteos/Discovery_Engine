@@ -37,6 +37,11 @@ Execution Engineer (`cline.executor`) of the Discovery Engine — a zero-budget,
 - ADR-0003: Single-Prompt Gateway Protocol.
 - ADR-0004: 3-File Memory Protocol & Git Synchronization Standard.
 - ADR-0007: Pure Python Zero-Dependency Fallback Engines.
+## Seed & Handover Protocol
+
+- User feeds `STARTPOINT_META_PROMPT.md` (or `PROJECT_STATE.md`) into a new Notebook session.
+- Notebook auto-detects system state (`v4.1.0`) and requests attaching the live `PROJECT_STATE.md` from Google Drive.
+- User detaches the static seed file; Notebook runs continuously on the auto-synced Drive source.
 
 ## Definition of Done for a Directive
 - [ ] All Python files pass `py_compile`.
