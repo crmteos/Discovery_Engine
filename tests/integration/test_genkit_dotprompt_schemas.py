@@ -2,15 +2,32 @@
 
 import json
 import sys
+from importlib import util
 from pathlib import Path
-
 from pydantic import ValidationError
 
-# Add project src directories to path so we can import schemas
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "05_Knowledge_Aggregator" / "src"))
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "06_Formalized_Model" / "src"))
+# Resolve project root (two levels up from tests/integration/)
+project_root = Path(__file__).parent.parent.parent
 
-from schemas import IntakeExtractionSchema, AxiomaticTransformSchema  # type: ignore
+# Add both src directories to path so we can import schemas
+sys.path.insert(0, str(project_root / "05_Knowledge_Aggregator" / "src"))
+sys.path.insert(0, str(project_root / "06_Formalized_Model" / "src"))
+
+# Load schemas using importlib to avoid conflicts between two schemas.py files
+spec_05 = util.spec_from_file_location(
+    "05_schemas", project_root / "05_Knowledge_Aggregator" / "src" / "schemas.py"
+)
+schemas_05 = util.module_from_spec(spec_05)
+spec_05.loader.exec_module(schemas_05)  # type: ignore
+
+spec_06 = util.spec_from_file_location(
+    "06_schemas", project_root / "06_Formalized_Model" / "src" / "schemas.py"
+)
+schemas_06 = util.module_from_spec(spec_06)
+spec_06.loader.exec_module(schemas_06)  # type: ignore
+
+IntakeExtractionSchema = schemas_05.IntakeExtractionSchema
+AxiomaticTransformSchema = schemas_06.AxiomaticTransformSchema
 
 
 def test_intake_extraction_valid():
