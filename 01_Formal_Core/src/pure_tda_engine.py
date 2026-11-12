@@ -104,5 +104,107 @@ def _test():
     print("pure_tda_engine --test: OK", res)
     return 0
 
+
+class InvariantElephantResult:
+    """Result of extracting the objective invariant ("the Elephant") from dual streams."""
+
+    def __init__(
+        self,
+        h0_a: int,
+        h1_a: int,
+        h0_b: int,
+        h1_b: int,
+        invariant_coefficient: float,
+        elephant_id: str,
+    ):
+        self.h0_a = h0_a
+        self.h1_a = h1_a
+        self.h0_b = h0_b
+        self.h1_b = h1_b
+        self.invariant_coefficient = invariant_coefficient
+        self.elephant_id = elephant_id
+        self.is_trivial = invariant_coefficient == 0.0
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "elephant_id": self.elephant_id,
+            "H0_stream_a": self.h0_a,
+            "H1_stream_a": self.h1_a,
+            "H0_stream_b": self.h0_b,
+            "H1_stream_b": self.h1_b,
+            "invariant_coefficient": self.invariant_coefficient,
+            "is_trivial": self.is_trivial,
+        }
+
+    def __str__(self) -> str:
+        return (
+            f"InvariantElephantResult(id={self.elephant_id}, "
+            f"H0_A={self.h0_a}, H1_A={self.h1_a}, "
+            f"H0_B={self.h0_b}, H1_B={self.h1_b}, "
+            f"invariant={self.invariant_coefficient:.4f}, "
+            f"trivial={self.is_trivial})"
+        )
+
+
+def extract_context_invariant(
+    betti_a: Dict[str, int],
+    betti_b: Dict[str, int],
+    elephant_id: str = "elephant_primary",
+) -> InvariantElephantResult:
+    """Extract context-invariant from dual-stream Betti number comparison.
+
+    Computes the objective invariant coefficient by comparing the
+    topological invariants (Betti numbers H0, H1) from two parallel
+    cognitive streams (Stream A and Stream B),
+
+    The invariant coefficient quantifies the preserved objective truth
+    across both interpretations of the same data,
+    following the principle that the "Elephant" (objective reality)
+    is the invariant component common to both projections.
+
+    Parameters
+    ----------
+    betti_a : Dict[str, int]
+        Betti numbers from Stream A: {"H0": int, "H1": int}
+    betti_b : Dict[str, int]
+        Betti numbers from Stream B: {"H0": int, "H1": int}
+    elephant_id : str
+        Identifier for the elephant instance being analyzed.
+
+    Returns
+    -------
+    InvariantElephantResult
+        Named result containing the comparative invariants and the
+        computed invariant coefficient.
+    """
+    h0_a = betti_a.get("H0", 0)
+    h1_a = betti_a.get("H1", 0)
+    h0_b = betti_b.get("H0", 0)
+    h1_b = betti_b.get("H1", 0)
+
+    # Compute invariant coefficient as the common component ratio
+    # The invariant is the component that is COMMON to both streams
+    # (i.e., not affected by the basis transformation)
+    h0_common = min(h0_a, h0_b)
+    h1_common = min(h1_a, h1_b)
+    h0_total = max(h0_a, h0_b)
+    h1_total = max(h1_a, h1_b)
+
+    # Avoid division by zero
+    if h0_total == 0 and h1_total == 0:
+        invariant_coefficient = 0.0
+    else:
+        invariant_coefficient = (h0_common + h1_common) / (h0_total + h1_total)
+
+    return InvariantElephantResult(
+        h0_a=h0_a,
+        h1_a=h1_a,
+        h0_b=h0_b,
+        h1_b=h1_b,
+        invariant_coefficient=invariant_coefficient,
+        elephant_id=elephant_id,
+    )
+
+
 if __name__ == "__main__":
     sys.exit(_test() if "--test" in sys.argv else 0)
