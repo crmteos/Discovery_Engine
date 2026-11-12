@@ -40,6 +40,28 @@ jobs:
           python -m py_compile tests/integration/test_gemini_cli_audit.py
           echo "All scripts validated successfully"
 
+      - name: 🏥 Run Code Health Check
+        run: |
+          python scripts/jules_code_health.py --check
+
+      - name: 🛑 Fail if Coverage Below Threshold
+        run: |
+          python -c "
+import json, sys
+try:
+    data = json.load(open('logs/code_health_report.json'))
+except Exception:
+    sys.exit(1)
+cov = data.get('coverage_percent', 0)
+if cov < 80:
+    print(f'Coverage {cov}% below 80% threshold')
+    sys.exit(1)
+smells = data.get('smells_detected', False)
+if smells:
+    print('TODO/FIXME smells detected')
+    sys.exit(1)
+"
+
       - name: 📄 Generate Audit Report
         run: |
           echo "=== Gemini CLI DoD Audit Summary ==="

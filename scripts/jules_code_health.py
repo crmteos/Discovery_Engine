@@ -15,6 +15,7 @@ import os
 import re
 import subprocess
 import sys
+import datetime
 from pathlib import Path
 
 
@@ -100,6 +101,9 @@ def main():
     parser.add_argument(
         "--report", action="store_true", help="Generate JSON report file"
     )
+    parser.add_argument(
+        "--sync-state", action="store_true", help="Sync code health metrics to PROJECT_STATE.md"
+    )
     args = parser.parse_args()
 
     # Ensure log directory exists
@@ -154,6 +158,34 @@ def main():
         print(f"Report written to {REPORT_PATH}")
 
     # In offline mode, exit code is always 0
+    if args.sync_state:
+        report_path = LOG_DIR / "code_health_report.json"
+        project_state_path = PROJECT_ROOT / "PROJECT_STATE.md"
+        try:
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+        except Exception as e:
+            print(f"Failed to read code health report: {e}")
+            sys.exit(0)
+        cov = report.get("coverage_percent", 0)
+        smells = report.get("smells_detected", False)
+        todo_count = report.get("todo_fixme_count", 0)
+        timestamp = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        section = f"---\n### Code Health & Verification (auto-synced)\n- **Coverage:** {cov}%\n- **TODO/FIXME Smells:** {'Yes' if smells else 'No'} (count: {todo_count})\n- **Last Synced:** {timestamp}\n---\n"
+        content = project_state_path.read_text(encoding="utf-8")
+        marker_start = "---\n### Code Health & Verification (auto-synced)\n"
+        marker_end = "---\n"
+        if marker_start in content:
+            start_idx = content.index(marker_start)
+            end_idx = content.index(marker_end, start_idx) + len(marker_end)
+            new_content = content[:start_idx] + section + content[end_idx:]
+        else:
+            insert_pos = content.rfind("\n---\n")
+            if insert_pos >= 0:
+                new_content = content[:insert_pos] + section + content[insert_pos:]
+            else:
+                new_content = content + section
+        project_state_path.write_text(new_content, encoding="utf-8")
+        print(f"Synced code health metrics to {project_state_path}")
     sys.exit(0)
 
 
