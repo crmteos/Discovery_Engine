@@ -2,7 +2,7 @@
 
 **Notebook Role:** Master Architect — Data Plane (Second Notebook of the Root Master Governance Pair)
 **Companion File:** `PROJECT_STATE.md` — Control Plane (Master Governance, Node Registry, System Metrics)
-**System Version:** v5.4.0 / Phase 45
+**System Version:** v5.6.0 / Phase 47
 **Date:** 2026-11-11
 **Budget:** $0.00 (Pure Open-Source & Local Hardware Stack - Enterprise Switcher enabled via Vertex AI)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_CONTEXT.md
@@ -191,6 +191,34 @@ Processed_Gate/normalized_triples/
 - `tests/integration/test_search_intake_adapter.py` — Integration tests
 - `Intake_Queue/drafts/` — Generated draft directory
 
-**DoD Reference:** Synchronized to `v5.3.0 / Phase 44` memory triad.
+## 12. TDA & Basis Transformer (v5.6.0 / Phase 47)
+
+**Purpose:** This section documents the TDA (Topological Data Analysis) and Basis Transformer implementations in Node 01 Formal Core (`01_Formal_Core/src/pure_tda_engine.py` and `01_Formal_Core/src/basis_transformer.py`).
+
+**Topological-Grounded Engine:**
+- Vietoris-Rips filtration & Betti numbers ($H_0, H_1$) using pure Python / NumPy
+- Time-Delay Embedding (Takens' Theorem) for phase-space reconstruction of scalar time-series
+- Noise filtering based on DTM (Distance-to-Measure)
+
+**Basis Transformer:**
+- **Logarithmic basis shift:** Deterministic recalculation of data arrays from decimal anthropomorphic scale $\log_{10}(x)$ to binary natural information basis $\log_2(x)$
+- **Wavelet transformation of "time" parameter:** Transformation of time-series parameters $T$ into frequency process superposition using Discrete Fourier Transform (DFT/FFT via `scipy.fft`)
+
+**Implementation Details:**
+- `pure_tda_engine.py`: Time-Delay Embedding function `time_delay_embed(series, delay, dimension)` and `betti_from_embedded(series, delay, dimension, eps)` for computing Betti numbers from embedded point clouds
+- `basis_transformer.py`: `log10_to_log2(data)` for base conversion, `dft(time_series, dt)` and `dft_amplitude_spectrum(time_series, dt)` for Fourier analysis
+
+**Data Flow:**
+```
+Node 01 Formal Core TDA engine → Betti number computation → H0/H1 invariants
+Node 01 Formal Core Basis Transformer → log10→log2 conversion → spectral analysis
+```
+
+**Related Files:**
+- `01_Formal_Core/src/pure_tda_engine.py` — Pure Python TDA Engine with Vietoris-Rips & TDE
+- `01_Formal_Core/src/basis_transformer.py` — Basis Transformer with log scale conversion & FFT
+- `tests/integration/test_tda_basis_transformer.py` — Integration tests
+
+**DoD Reference:** Synchronized to `v5.6.0` / Phase 47 memory triad.
 
 **End of PROJECT_CONTEXT.md — Master Architect Data Plane — v5.2.0**

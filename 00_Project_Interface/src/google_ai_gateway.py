@@ -15,8 +15,8 @@ from pathlib import Path
 from typing import Any, Optional
 
 try:
-    import google.genai as genai
-    from google.genai import types
+    import google.genai as genai  # type: ignore[import]
+    from google.genai import types  # type: ignore[import]
 except ImportError:  # pragma: no cover
     genai = None  # type: ignore[assignment]
     types = None  # type: ignore[assignment]

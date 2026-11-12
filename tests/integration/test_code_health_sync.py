@@ -76,7 +76,7 @@ def test_code_health_check_report_valid():
     # Expect coverage_percent and smells_detected at minimum
     assert "coverage_percent" in report, "Report missing 'coverage_percent'"
     assert "smells_detected" in report, "Report missing 'smells_detected'"
-    assert "todo_fixme_count" in report, "Report missing 'todo_fixme_count'
+    assert "todo_fixme_count" in report, "Report missing 'todo_fixme_count'"
 
 
 def test_code_health_report_generation():
