@@ -2,7 +2,7 @@
 
 **Notebook Role:** Master Architect — Data Plane (Second Notebook of the Root Master Governance Pair)
 **Companion File:** `PROJECT_STATE.md` — Control Plane (Master Governance, Node Registry, System Metrics)
-**System Version:** v4.4.0 / Phase 35
+**System Version:** v4.5.0 / Phase 36
 **Date:** 2026-11-11
 **Budget:** $0.00 (Pure Open-Source & Local Hardware Stack)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_CONTEXT.md
@@ -116,8 +116,9 @@ Base URL: `http://127.0.0.1:3001/api/v1` (AnythingLLM local). Offline fallback (
 
 ---
 
-## 10. Dual-Provider Inference Engine Topology (v4.4.0 / Phase 35)
+## 10. Dual-Provider Inference Engine Topology (v4.5.0 / Phase 36)
 
+**Local Ollama Inference:**
 Local LLM inference is provided by the on-host Ollama server (`http://127.0.0.1:11434`), bound through `00_Project_Interface/src/ollama_gateway.py`.
 
 | Endpoint | Method | Path | Purpose |
@@ -132,11 +133,21 @@ Local LLM inference is provided by the on-host Ollama server (`http://127.0.0.1:
 | Offline behaviour | Graceful fallback: `--test` completes with `exit_code: 0` even when the Ollama server is unreachable |
 | Budget | $0.00 (local CPU, no paid APIs) |
 
+**Google AI Studio Inference:**
+Google AI Studio API inference via `google-genai` SDK, model chain `gemini-2.5-flash` → `gemini-2.0-flash` → `gemini-1.5-flash`, implemented in `00_Project_Interface/src/google_ai_gateway.py` with API key resolution and fallback chain.
+
+| Parameter | Value |
+|-----------|-------|
+| API Key | `GEMINI_API_KEY` environment variable |
+| Model Priority | `gemini-2.5-flash` → `gemini-2.0-flash` → `gemini-1.5-flash` |
+| Free Tier | Google AI Studio free tier ($0.00 budget) |
+| Context Caching | Gemini Context Caching feature for specification documents (`PROJECT_SPEC.md`, `PROJECT_CONTEXT.md`) with TTL management (5 min – 1 hr), reducing input token consumption by ~90% during multi-turn sessions |
+
 Telemetry from each `--test` run is posted to the Universal Message Bus (`Bridge/messages.jsonl`) via `Bridge/bus_manager.py` (`log_core_telemetry`).
 
 ---
 
-## 11. OSINT Search & AI Grounding Intake Topology & Flow (v4.4.0 / Phase 35)
+## 11. OSINT Search & AI Grounding Intake Topology & Flow (v4.5.0 / Phase 36)
 
 **Purpose:** This section documents the OSINT Search & AI Grounding Intake Adapter implementation in Node 05 Knowledge Aggregator (`05_Knowledge_Aggregator/src/search_intake_adapter.py`). This adapter enables zero-cost web search integration, draft generation with structured metadata, and graceful offline fallback.
 

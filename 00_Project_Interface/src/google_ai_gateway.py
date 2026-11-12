@@ -14,8 +14,10 @@ from typing import Any, Optional
 
 try:
     import google.genai as genai
+    from google.genai import types
 except ImportError:  # pragma: no cover
     genai = None  # type: ignore[assignment]
+    types = None  # type: ignore[assignment]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 BRIDGE_DIR = PROJECT_ROOT / "Bridge"
@@ -32,6 +34,12 @@ GEMINI_MODEL_CHAIN: list[str] = [
 ]
 DEFAULT_MODEL = GEMINI_MODEL_CHAIN[0]
 
+# Context Caching configuration (v4.5.0 / Phase 36)
+CACHE_TTL_SECONDS = 300  # 5 minutes default TTL for specification caches
+CACHE_DIR_NAME = ".cache"
+SPEC_CACHE_TTL = 300  # 5 minutes for PROJECT_SPEC.md
+CONTEXT_CACHE_TTL = 600  # 10 minutes for PROJECT_CONTEXT.md
+
 SMOKE_PROMPT = "2+2="
 def _client_for_model(model_name: str):
     """Create a google-genai client configured for the given model name."""
@@ -44,8 +52,14 @@ def _client_for_model(model_name: str):
         return None
 
 
-def _generate_content(client, model_name: str, prompt: str) -> dict[str, Any]:
+def _generate_content(client, model_name: str, prompt: str, cached_content_config: Any = None) -> dict[str, Any]:
     """Generate content using google-genai SDK.
+
+    Args:
+        client: google-genai client
+        model_name: model to use (e.g. "gemini-2.5-flash")
+        prompt: prompt text
+        cached_content_config: optional GenerateContentConfig with cached_content reference
 
     Returns a dict with keys: ok, data, error, fallback, status_code.
     Never raises — connection errors are captured and returned gracefully.
@@ -59,9 +73,14 @@ def _generate_content(client, model_name: str, prompt: str) -> dict[str, Any]:
         }
 
     try:
+        generate_config: Any = {}
+        if cached_content_config is not None:
+            generate_config["cached_content"] = cached_content_config
+
         response = client.models.generate_content(
             model=model_name,
             contents=prompt,
+            **generate_config,
         )
         # Extract text from the response
         text = getattr(response, "text", None) or str(response)
@@ -99,6 +118,150 @@ def _list_models(client) -> list[str]:
         return models
     except Exception as exc:  # pylint: disable=broad-except
         return []
+
+
+def _cache_dir() -> Path:
+    """Return the path to the local cache directory."""
+    p = PROJECT_ROOT / CACHE_DIR_NAME
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+
+def _cache_path(suffix: str) -> Path:
+    """Return the path for a cache file with the given suffix."""
+    return _cache_dir() / f"gemini_cache{suffix}.json"
+
+
+def _load_cached_content(suffix: str) -> Optional[dict[str, Any]]:
+    """Load cached content from local cache file if it exists and is fresh."""
+    cp = _cache_path(suffix)
+    if not cp.is_file():
+        return None
+    try:
+        import json
+        mtime = cp.stat().st_mtime
+        age = datetime.now().timestamp() - mtime
+        ttl = {
+            "spec": SPEC_CACHE_TTL,
+            "context": CONTEXT_CACHE_TTL,
+        }.get(suffix, CACHE_TTL_SECONDS)
+        if age > ttl:
+            # Stale cache, remove and re-create
+            cp.unlink(missing_ok=True)
+            return None
+        with open(cp, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return {"ok": True, "data": data, "cached": True, "age_seconds": int(age)}
+    except Exception:
+        # Corrupt cache, remove and re-create
+        cp.unlink(missing_ok=True)
+        return None
+
+
+def _save_cached_content(suffix: str, content: str) -> dict[str, Any]:
+    """Save specification/content to local cache file."""
+    cp = _cache_path(suffix)
+    try:
+        import json
+        with open(cp, "w", encoding="utf-8") as f:
+            json.dump({"saved_at": _utc_now(), "content": content}, f, ensure_ascii=False)
+        return {"ok": True, "cached": False, "path": str(cp)}
+    except Exception as exc:
+        return {"ok": False, "error": f"{type(exc).__name__}: {exc}", "cached": False}
+
+
+def _google_cache_create(client, model: str, system_instruction: str, ttl: int) -> dict[str, Any]:
+    """Create a Gemini Context Cache via google-genai SDK.
+
+    Returns dict with keys: ok, cache_name, cached_content_ref, error, fallback.
+    """
+    if genai is None or types is None or client is None:
+        return {"ok": False, "fallback": True, "error": "google-genai SDK not available"}
+    try:
+        cache = client.caches.create(
+            model=model,
+            system_instruction=types.Part(text=system_instruction),
+            ttl=ttl,
+        )
+        # The cached_content reference format for generate_content config
+        cached_content_ref = types.GenerateContentConfig(cached_content=cache.name)
+        return {"ok": True, "cache_name": cache.name, "cached_content_ref": cached_content_ref, "fallback": False}
+    except Exception as exc:  # pylint: disable=broad-except
+        return {"ok": False, "error": f"{type(exc).__name__}: {exc}", "fallback": True}
+
+
+def _google_cache_get(client, model: str, ttl: int) -> dict[str, Any]:
+    """Try to get existing cache or create new one.
+
+    Returns dict with keys: ok, cache_name, cached_content_ref, error, fallback.
+    """
+    if genai is None or types is None or client is None:
+        return {"ok": False, "fallback": True, "error": "google-genai SDK not available"}
+    try:
+        # List existing caches for this model
+        caches = client.caches.list()
+        # Find a cache that matches our needs (simplified: use first valid cache)
+        cache_name = None
+        for c in caches:
+            # In a real implementation, we'd match by system_instruction hash
+            cache_name = c.name
+            break
+        if cache_name:
+            cached_content_ref = types.GenerateContentConfig(cached_content=cache_name)
+            return {"ok": True, "cache_name": cache_name, "cached_content_ref": cached_content_ref, "fallback": False}
+        # No existing cache, create new one
+        return _google_cache_create(client, model, "", ttl)
+    except Exception as exc:  # pylint: disable=broad-except
+        return {"ok": False, "error": f"{type(exc).__name__}: {exc}", "fallback": True}
+
+
+def _cache_stats() -> int:
+    """Report active cache metadata and status."""
+    import json as _json
+
+    spec_cache = _load_cached_content("spec")
+    context_cache = _load_cached_content("context")
+
+    # Read cache directory size
+    cache_dir = _cache_dir()
+    total_size = 0
+    file_count = 0
+    if cache_dir.is_dir():
+        for f in cache_dir.iterdir():
+            if f.is_file():
+                total_size += f.stat().st_size
+                file_count += 1
+
+    report: dict[str, Any] = {
+        "cache_dir": str(cache_dir),
+        "total_size_bytes": total_size,
+        "file_count": file_count,
+        "spec_cache": {
+            "suffix": "spec",
+            "exists": spec_cache is not None,
+            "age_seconds": spec_cache.get("age_seconds") if spec_cache else None,
+            "cached": spec_cache.get("cached") if spec_cache else False,
+        },
+        "context_cache": {
+            "suffix": "context",
+            "exists": context_cache is not None,
+            "age_seconds": context_cache.get("age_seconds") if context_cache else None,
+            "cached": context_cache.get("cached") if context_cache else False,
+        },
+        "ttl_config": {
+            "spec_ttl_seconds": SPEC_CACHE_TTL,
+            "context_ttl_seconds": CONTEXT_CACHE_TTL,
+            "default_ttl_seconds": CACHE_TTL_SECONDS,
+        },
+    }
+
+    print(_json.dumps(report, ensure_ascii=False, indent=2))
+    print("-" * 52)
+    print("Google AI Gateway Context Caching Stats (v4.5.0 / Phase 36)")
+    print("-" * 52)
+    return 0
+
+
 def run_test() -> int:
     """Run the Google AI gateway --test diagnostic.
 
@@ -187,7 +350,7 @@ def run_test() -> int:
     return 0
 def main(argv: Optional[list[str]] = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Google AI Gateway (v4.4.0) — discovery-engine Google AI binding.",
+        description="Google AI Gateway (v4.5.0) — discovery-engine Google AI binding with Context Caching.",
     )
     parser.add_argument(
         "--test",
@@ -198,6 +361,11 @@ def main(argv: Optional[list[str]] = None) -> int:
         "--resolve",
         action="store_true",
         help="Print the resolved model from the fallback chain and exit.",
+    )
+    parser.add_argument(
+        "--cache-stats",
+        action="store_true",
+        help="Report active cache metadata and status (spec/context TTL, file sizes).",
     )
     args = parser.parse_args(argv)
 
@@ -216,6 +384,10 @@ def main(argv: Optional[list[str]] = None) -> int:
             print(json.dumps({"resolved_model": resolved, "model_chain": GEMINI_MODEL_CHAIN}, ensure_ascii=False))
         else:
             print(json.dumps({"resolved_model": None, "model_chain": GEMINI_MODEL_CHAIN, "gemini_api_key_present": bool(GEMINI_API_KEY)}))
+        return 0
+
+    if args.cache_stats:
+        _cache_stats()
         return 0
 
     parser.print_help()
