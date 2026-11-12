@@ -2,7 +2,7 @@
 
 **Notebook Role:** Master Architect — Data Plane (Second Notebook of the Root Master Governance Pair)
 **Companion File:** `PROJECT_STATE.md` — Control Plane (Master Governance, Node Registry, System Metrics)
-**System Version:** v5.0.0 / Phase 41
+**System Version:** v5.1.0 / Phase 42
 **Date:** 2026-11-11
 **Budget:** $0.00 (Pure Open-Source & Local Hardware Stack)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_CONTEXT.md
@@ -30,6 +30,7 @@ The Discovery Engine operates over a unified, mathematically grounded knowledge 
 - **Node 05 — Knowledge Aggregator:** OSINT stream ingestion, cognitive model formation, concept normalization, triple extraction.
 - **Node 06 — Formalized Target Model:** Mathematically grounded cognitive target model assembled from validated triples.
 - **Node 00 — Project Interface:** Dashboard views, execution reporting, AnythingLLM gateway binding.
+- **Code Health:** Automated analysis and sanitization via `scripts/jules_code_health.py`.
 
 All data-plane artifacts flow through the **Universal Transactional JSONL Message Bus** (`Bridge/messages.jsonl`) managed by `Bridge/bus_manager.py`.
 

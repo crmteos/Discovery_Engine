@@ -1,4 +1,4 @@
-# PROJECT_SPEC — Discovery Engine (v5.0.0 / Phase 41)
+# PROJECT_SPEC — Discovery Engine (v5.1.0 / Phase 42)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_SPEC.md
 
 ## 1. Project Goal
@@ -40,6 +40,7 @@ Zero-Budget Open-Source Autonomous Discovery Engine & Knowledge Graph Formalizat
 - [ ] Zero ungrounded or external dependencies.
 - [ ] `PROJECT_STATE.md` updated and synchronized to `v5.0.0 / Phase 41`.
 
+- [ ] Run `scripts/jules_code_health.py --check` and verify JSON report.
 ---
 
 *Source: `Bridge/in/directive-phase27-v3.6.0.json` (directive:phase27, v3.6.0, system.master_architect → cline.executor)*
