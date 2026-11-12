@@ -1,4 +1,4 @@
-# PROJECT_SPEC — Discovery Engine (v5.2.0 / Phase 43)
+# PROJECT_SPEC — Discovery Engine (v5.3.0 / Phase 44)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_SPEC.md
 
 ## 1. Project Goal
@@ -33,6 +33,7 @@ Zero-Budget Open-Source Autonomous Discovery Engine & Knowledge Graph Formalizat
 - **ADR-0003:** Single-Prompt Gateway Protocol.
 - **ADR-0004:** 3-File Memory Protocol & Git Synchronization Standard (`PROJECT_SPEC.md` Specification + `PROJECT_CONTEXT.md` Data Plane + `PROJECT_STATE.md` Control Plane & Gateway Report; primary remote endpoints: `https://github.com/crmteos/Discovery_Engine.git`; local Git state persistence after every directive).
 - **ADR-0005:** Private Repository & Drive Sync Gateway Protocol. All code stored in private GitHub repo `https://github.com/crmteos/Discovery_Engine.git`. Google Drive sync limited to `PROJECT_SPEC.md`, `PROJECT_CONTEXT.md`, `PROJECT_STATE.md` only (raw code/vendor files excluded). `scripts/sync_gdrive.py` automates sync. Header synchronized to `v5.0.0 / Phase 41`.
+- **ADR-0008:** Enterprise Switcher & Data Residency (v5.3.0 / Phase 44). transparent switching between Google AI Studio and Vertex AI with EU/US data residency support (`europe-west1` / `us-central1`). Controlled via `--enterprise` CLI flag and `VERTEX_AI_ENABLED` / `GCP_PROJECT_ID` / `VERTEX_LOCATION` environment variables.
 - **ADR-0007:** Pure Python Zero-Dependency Fallback Engines.
 
 ## 6. Definition of Done (DoD)

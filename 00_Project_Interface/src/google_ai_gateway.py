@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""00_Project_Interface/src/google_ai_gateway.py — Google AI Gateway (v4.4.0)."""
+"""00_Project_Interface/src/google_ai_gateway.py — Google AI Gateway (v5.3.0 / Phase 44).
+Google AI Gateway with Enterprise Switcher & Data Residency (EU/US) support.
+"""
 
 from __future__ import annotations
 
@@ -26,6 +28,9 @@ if str(BRIDGE_DIR) not in sys.path:
     sys.path.insert(0, str(BRIDGE_DIR))
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+VERTEX_AI_ENABLED = os.environ.get("VERTEX_AI_ENABLED", "").lower() in ("true", "1")
+VERTEX_LOCATION = os.environ.get("VERTEX_LOCATION", "europe-west1")
+GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "")
 
 GEMINI_MODEL_CHAIN: list[str] = [
     "gemini-2.5-flash",
@@ -41,18 +46,34 @@ SPEC_CACHE_TTL = 300  # 5 minutes for PROJECT_SPEC.md
 CONTEXT_CACHE_TTL = 600  # 10 minutes for PROJECT_CONTEXT.md
 
 SMOKE_PROMPT = "2+2="
-def _client_for_model(model_name: str):
-    """Create a google-genai client configured for the given model name."""
+def _client_for_model(model_name: str, enterprise: bool = False, location: str = "europe-west1", project_id: str = "") -> Any:
+    """Create a google-genai client configured for the given model name.
+
+    Args:
+        model_name: model to use (e.g. "gemini-2.5-flash")
+        enterprise: if True, use Vertex AI authentication
+        location: data residency location (europe-west1 or us-central1)
+        project_id: GCP project ID for Vertex AI
+
+    Returns:
+        google-genai client or None
+    """
     if genai is None:
         return None
     try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        if enterprise and project_id:
+            client = genai.Client(vertexai=True, project=project_id, location=location)
+        elif enterprise and not project_id:
+            # Enterprise mode requested but no project ID - fallback to studio
+            client = genai.Client(api_key=GEMINI_API_KEY)
+        else:
+            client = genai.Client(api_key=GEMINI_API_KEY)
         return client
     except Exception:
         return None
 
 
-def _generate_content(client, model_name: str, prompt: str, cached_content_config: Any = None) -> dict[str, Any]:
+def _generate_content(client, model_name: str, prompt: str, cached_content_config: Any = None, enterprise: bool = False, location: str = "europe-west1", project_id: str = "") -> dict[str, Any]:
     """Generate content using google-genai SDK.
 
     Args:
@@ -60,6 +81,9 @@ def _generate_content(client, model_name: str, prompt: str, cached_content_confi
         model_name: model to use (e.g. "gemini-2.5-flash")
         prompt: prompt text
         cached_content_config: optional GenerateContentConfig with cached_content reference
+        enterprise: whether enterprise mode is enabled
+        location: data residency location
+        project_id: GCP project ID
 
     Returns a dict with keys: ok, data, error, fallback, status_code.
     Never raises — connection errors are captured and returned gracefully.
@@ -77,11 +101,23 @@ def _generate_content(client, model_name: str, prompt: str, cached_content_confi
         if cached_content_config is not None:
             generate_config["cached_content"] = cached_content_config
 
-        response = client.models.generate_content(
-            model=model_name,
-            contents=prompt,
-            **generate_config,
-        )
+        # Use vertexai parameters if enterprise mode
+        if enterprise and project_id:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+                **generate_config,
+                vertexai=True,
+                project=project_id,
+                location=location,
+            )
+        else:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+                **generate_config,
+            )
+
         # Extract text from the response
         text = getattr(response, "text", None) or str(response)
         return {
@@ -215,8 +251,14 @@ def _google_cache_get(client, model: str, ttl: int) -> dict[str, Any]:
         return {"ok": False, "error": f"{type(exc).__name__}: {exc}", "fallback": True}
 
 
-def _cache_stats() -> int:
-    """Report active cache metadata and status."""
+def _cache_stats(enterprise: bool = False, location: str = "europe-west1", project_id: str = "") -> int:
+    """Report active cache metadata and status.
+
+    Args:
+        enterprise: whether enterprise mode is enabled
+        location: data residency location
+        project_id: GCP project ID
+    """
     import json as _json
 
     spec_cache = _load_cached_content("spec")
@@ -257,70 +299,88 @@ def _cache_stats() -> int:
 
     print(_json.dumps(report, ensure_ascii=False, indent=2))
     print("-" * 52)
-    print("Google AI Gateway Context Caching Stats (v4.5.0 / Phase 36)")
+    print(f"Google AI Gateway Context Caching Stats (v5.3.0 / Phase 44)")
+    print(f"Enterprise: {enterprise}, Location: {location}")
+    if project_id:
+        print(f"GCP Project ID: {project_id}")
     print("-" * 52)
     return 0
 
 
-def run_test() -> int:
-    """Run the Google AI gateway --test diagnostic.
+def run_test(enterprise: bool = False, location: str = "europe-west1") -> int:
+    """Run diagnostic validation test.
 
-    Behavior:
-      - If GEMINI_API_KEY is present: execute live API ping / generation test.
-      - If GEMINI_API_KEY is missing or network fails: execute graceful
-        fallback mode, log telemetry, and return exit_code: 0.
+    Args:
+        enterprise: whether enterprise mode is enabled
+        location: data residency location
+
+    Returns:
+        exit code (always 0 for graceful fallback)
     """
-    import json as _json
+    print("=== Google AI Gateway Test (v5.3.0 / Phase 44) ===")
+    print(f"Enterprise mode: {enterprise}")
+    print(f"Location: {location}")
+    print()
 
-    report: dict[str, Any] = {
-        "timestamp": _utc_now(),
-        "gemini_api_key_present": bool(GEMINI_API_KEY),
-        "model_chain": GEMINI_MODEL_CHAIN,
-        "resolved_model": None,
-        "generation": None,
-        "ping_ok": False,
-        "telemetry_status": "degraded_offline",
-    }
+    # Initialize client based on enterprise flag
+    client = _client_for_model(DEFAULT_MODEL, enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID)
 
-    client = _client_for_model(DEFAULT_MODEL) if GEMINI_API_KEY else None
-
-    # 1. Model resolution from the fallback chain
+    # Determine resolved model
     resolved_model = None
-    available_models = []
+    available_models: list[str] = []
+
     if client is not None:
-        available_models = _list_models(client)
-        # Find first available model from the chain
+        available_models = _list_models(client, enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID)
+        print(f"Available models: {available_models}")
+
+    # Try model chain resolution
+    for model_name in GEMINI_MODEL_CHAIN:
+        if model_name in available_models:
+            resolved_model = model_name
+            break
+
+    # If no model resolved in enterprise mode, try fallback chain
+    if not resolved_model and not enterprise:
         for model_name in GEMINI_MODEL_CHAIN:
             if model_name in available_models:
                 resolved_model = model_name
                 break
 
-    report["available_models"] = available_models
-    report["resolved_model"] = resolved_model
+    # Generate smoke prompt
+    generation_result = None
+    if resolved_model and client is not None:
+        generation_result = _generate_content(
+            client, resolved_model, SMOKE_PROMPT,
+            enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID,
+        )
+    else:
+        generation_result = _generate_content(
+            client, DEFAULT_MODEL, SMOKE_PROMPT,
+            enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID,
+        )
 
-    # 2. Smoke generation against resolved model
-    generation_result: Optional[dict[str, Any]] = None
-    if resolved_model:
-        generation_result = _generate_content(client, resolved_model, SMOKE_PROMPT)
-        report["generation"] = {
-            "model": resolved_model,
-            "prompt": SMOKE_PROMPT,
-            "ok": generation_result.get("ok", False),
-            "status_code": generation_result.get("status_code", 0),
-            "fallback": generation_result.get("fallback", False),
-            "error": generation_result.get("error"),
-            "response": generation_result.get("data"),
-        }
+    # Build report
+    report = {
+        "timestamp": _utc_now(),
+        "enterprise": enterprise,
+        "location": location,
+        "resolved_model": resolved_model,
+        "available_models": available_models,
+        "generation_ok": generation_result.get("ok", False) if generation_result else False,
+        "generation_error": generation_result.get("error") if generation_result else None,
+        "fallback": generation_result.get("fallback", True) if generation_result else True,
+        "status_code": generation_result.get("status_code", 0) if generation_result else 0,
+    }
 
-    # 3. Ping status
+    # Ping status
     report["ping_ok"] = generation_result is not None and generation_result.get("ok", False) if generation_result else False
 
-    # 4. Telemetry status
+    # Telemetry status
     all_ok = bool(GEMINI_API_KEY) and resolved_model is not None
     telemetry_status = "completed" if all_ok else "degraded_offline"
     report["telemetry_status"] = telemetry_status
 
-    # 5. Post telemetry to the message bus (best effort)
+    # Post telemetry to the message bus (best effort)
     try:
         import Bridge.bus_manager as bus_manager
 
@@ -337,57 +397,32 @@ def run_test() -> int:
     except Exception:
         pass  # Best-effort bus posting
 
-    # 6. Print report
+    # Print report
     print(_json.dumps(report, ensure_ascii=False, indent=2))
     print("-" * 68)
     print(f"Google AI gateway --test: {telemetry_status.upper()}")
     print(f"  Ping/API available: {'OK' if report['ping_ok'] else 'OFFLINE/FALLBACK'}")
     print(f"  Resolved model: {resolved_model or 'none (offline fallback)'}")
+    print(f"  Enterprise: {enterprise}, Location: {location}")
     print(f"  Budget: $0.00 | Google AI Studio free tier + Local Ollama fallback")
-    print("  -" * 34)
+    print("-" * 34)
 
     # Always return exit_code: 0 (graceful fallback even on failure)
     return 0
-def main(argv: Optional[list[str]] = None) -> int:
-    parser = argparse.ArgumentParser(
-        description="Google AI Gateway (v4.5.0) — discovery-engine Google AI binding with Context Caching.",
-    )
-    parser.add_argument(
-        "--test",
-        action="store_true",
-        help="Run diagnostic validation (ping + model resolve + smoke generate).",
-    )
-    parser.add_argument(
-        "--resolve",
-        action="store_true",
-        help="Print the resolved model from the fallback chain and exit.",
-    )
-    parser.add_argument(
-        "--cache-stats",
-        action="store_true",
-        help="Report active cache metadata and status (spec/context TTL, file sizes).",
-    )
-    args = parser.parse_args(argv)
-
-    if args.test:
-        return run_test()
-
-    if args.resolve:
-        if genai is not None and GEMINI_API_KEY:
-            client = _client_for_model(DEFAULT_MODEL)
-            available = _list_models(client) if client else []
+_PROJECT_ID)
+            available = _list_models(client, enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID) if client else []
             resolved = None
             for model_name in GEMINI_MODEL_CHAIN:
                 if model_name in available:
                     resolved = model_name
                     break
-            print(json.dumps({"resolved_model": resolved, "model_chain": GEMINI_MODEL_CHAIN}, ensure_ascii=False))
+            print(json.dumps({"resolved_model": resolved, "model_chain": GEMINI_MODEL_CHAIN, "enterprise": enterprise, "location": location}, ensure_ascii=False))
         else:
-            print(json.dumps({"resolved_model": None, "model_chain": GEMINI_MODEL_CHAIN, "gemini_api_key_present": bool(GEMINI_API_KEY)}))
+            print(json.dumps({"resolved_model": None, "model_chain": GEMINI_MODEL_CHAIN, "enterprise": enterprise, "location": location, "gemini_api_key_present": bool(GEMINI_API_KEY)}))
         return 0
 
     if args.cache_stats:
-        _cache_stats()
+        _cache_stats(enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID)
         return 0
 
     parser.print_help()

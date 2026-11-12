@@ -2,9 +2,9 @@
 
 **Notebook Role:** Master Architect — Data Plane (Second Notebook of the Root Master Governance Pair)
 **Companion File:** `PROJECT_STATE.md` — Control Plane (Master Governance, Node Registry, System Metrics)
-**System Version:** v5.2.0 / Phase 43
+**System Version:** v5.3.0 / Phase 44
 **Date:** 2026-11-11
-**Budget:** $0.00 (Pure Open-Source & Local Hardware Stack)
+**Budget:** $0.00 (Pure Open-Source & Local Hardware Stack - Enterprise Switcher enabled via Vertex AI)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_CONTEXT.md
 
 ---
@@ -144,6 +144,13 @@ Google AI Studio API inference via `google-genai` SDK, model chain `gemini-2.5-f
 | Free Tier | Google AI Studio free tier ($0.00 budget) |
 | Context Caching | Gemini Context Caching feature for specification documents (`PROJECT_SPEC.md`, `PROJECT_CONTEXT.md`) with TTL management (5 min – 1 hr), reducing input token consumption by ~90% during multi-turn sessions |
 
+| Vertex AI | Vertex AI Enterprise Agent Platform integration with data residency support |
+|-----------|-----------------------------------------------------------------------|
+| EU Region | `europe-west1` - European Union data residency |
+| US Region | `us-central1` - United States data residency |
+| Enterprise Mode | Controlled via `--enterprise` flag and `VERTEX_AI_ENABLED` environment variable |
+| GCP Project ID | Required for Vertex AI authorization via `GCP_PROJECT_ID` env var |
+
 Telemetry from each `--test` run is posted to the Universal Message Bus (`Bridge/messages.jsonl`) via `Bridge/bus_manager.py` (`log_core_telemetry`).
 
 ---
@@ -182,6 +189,6 @@ Processed_Gate/normalized_triples/
 - `tests/integration/test_search_intake_adapter.py` — Integration tests
 - `Intake_Queue/drafts/` — Generated draft directory
 
-**DoD Reference:** Synchronized to `v5.2.0 / Phase 43` memory triad.
+**DoD Reference:** Synchronized to `v5.3.0 / Phase 44` memory triad.
 
 **End of PROJECT_CONTEXT.md — Master Architect Data Plane — v5.2.0**
