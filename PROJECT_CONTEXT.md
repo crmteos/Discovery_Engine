@@ -2,7 +2,7 @@
 
 **Notebook Role:** Master Architect — Data Plane (Second Notebook of the Root Master Governance Pair)
 **Companion File:** `PROJECT_STATE.md` — Control Plane (Master Governance, Node Registry, System Metrics)
-**System Version:** v4.3.0 / Phase 34
+**System Version:** v4.4.0 / Phase 35
 **Date:** 2026-11-11
 **Budget:** $0.00 (Pure Open-Source & Local Hardware Stack)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_CONTEXT.md
@@ -116,7 +116,7 @@ Base URL: `http://127.0.0.1:3001/api/v1` (AnythingLLM local). Offline fallback (
 
 ---
 
-## 10. Ollama Gateway REST API Topology (v4.0.0)
+## 10. Dual-Provider Inference Engine Topology (v4.4.0 / Phase 35)
 
 Local LLM inference is provided by the on-host Ollama server (`http://127.0.0.1:11434`), bound through `00_Project_Interface/src/ollama_gateway.py`.
 
@@ -136,7 +136,7 @@ Telemetry from each `--test` run is posted to the Universal Message Bus (`Bridge
 
 ---
 
-## 11. OSINT Search & AI Grounding Intake Topology & Flow (v4.3.0 / Phase 34)
+## 11. OSINT Search & AI Grounding Intake Topology & Flow (v4.4.0 / Phase 35)
 
 **Purpose:** This section documents the OSINT Search & AI Grounding Intake Adapter implementation in Node 05 Knowledge Aggregator (`05_Knowledge_Aggregator/src/search_intake_adapter.py`). This adapter enables zero-cost web search integration, draft generation with structured metadata, and graceful offline fallback.
 
@@ -170,6 +170,6 @@ Processed_Gate/normalized_triples/
 - `tests/integration/test_search_intake_adapter.py` — Integration tests
 - `Intake_Queue/drafts/` — Generated draft directory
 
-**DoD Reference:** Synchronized to v4.3.0 / Phase 34 memory triad.
+**DoD Reference:** Synchronized to v4.4.0 / Phase 35 memory triad.
 
 **End of PROJECT_CONTEXT.md — Master Architect Data Plane — v4.3.0**

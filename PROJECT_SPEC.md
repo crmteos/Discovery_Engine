@@ -1,4 +1,4 @@
-# PROJECT_SPEC — Discovery Engine (v4.3.0 / Phase 34)
+# PROJECT_SPEC — Discovery Engine (v4.4.0 / Phase 35)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_SPEC.md
 
 ## 1. Project Goal
@@ -9,7 +9,9 @@ Zero-Budget Open-Source Autonomous Discovery Engine & Knowledge Graph Formalizat
 - **Host OS:** Windows 11 Pro
 - **CPU:** AMD Ryzen 5 5625U (6 cores / 12 threads)
 - **RAM:** 16 GB
-- **Inference:** CPU-bound Ollama (`qwen2.5-coder`, `llama3.1:8b`, `qwen2.5:7b`). No NVIDIA CUDA / Dedicated GPU.
+- **Inference:** Dual-Provider Inference Engine:
+  - Local Ollama REST (`http://127.0.0.1:11434`), model fallback chain `qwen2.5-coder:14b` → `llama3.1:8b` → `qwen2.5:7b`, implemented in `00_Project_Interface/src/ollama_gateway.py` with liveness ping (`/api/tags`) and graceful offline fallback.
+  - Google AI Studio API via `google-genai` SDK, model chain `gemini-2.5-flash` → `gemini-2.0-flash` → `gemini-1.5-flash`, implemented in `00_Project_Interface/src/google_ai_gateway.py` with API key resolution and fallback chain.
 - **Gateway:** Local Ollama REST (`http://127.0.0.1:11434`), model fallback chain `qwen2.5-coder:14b` → `llama3.1:8b` → `qwen2.5:7b`, implemented in `00_Project_Interface/src/ollama_gateway.py` with liveness ping (`/api/tags`) and graceful offline fallback.
 - **Node 05 — Knowledge Aggregator:** Ollama RDF Triple Extraction — LLM extraction pipeline (`qwen2.5-coder:14b` → `llama3.1:8b` → `qwen2.5:7b`) converting unstructured text into W3C PROV-O / SKOS compliant RDF triplets with SHACL shape validation. `--llm-extract` mode in `05_Knowledge_Aggregator/src/intake_processor.py`. Offline fallback: gracefully skip LLM stage when Ollama server unreachable.
 - **Core Libraries:** NetworkX, SymPy, PyTorch (CPU-mode), Pure Python Fallback Engines.
@@ -30,13 +32,13 @@ Zero-Budget Open-Source Autonomous Discovery Engine & Knowledge Graph Formalizat
 - **ADR-0002:** Non-destructive Trash Lifecycle Bin (`Bridge/trash/`).
 - **ADR-0003:** Single-Prompt Gateway Protocol.
 - **ADR-0004:** 3-File Memory Protocol & Git Synchronization Standard (`PROJECT_SPEC.md` Specification + `PROJECT_CONTEXT.md` Data Plane + `PROJECT_STATE.md` Control Plane & Gateway Report; primary remote endpoints: `https://github.com/crmteos/Discovery_Engine.git`; local Git state persistence after every directive).
-- **ADR-0005:** Private Repository & Drive Sync Gateway Protocol. All code stored in private GitHub repo `https://github.com/crmteos/Discovery_Engine.git`. Google Drive sync limited to `PROJECT_SPEC.md`, `PROJECT_CONTEXT.md`, `PROJECT_STATE.md` only (raw code/vendor files excluded). `scripts/sync_gdrive.py` automates sync. Header synchronized to `v4.3.0 / Phase 34`.
+- **ADR-0005:** Private Repository & Drive Sync Gateway Protocol. All code stored in private GitHub repo `https://github.com/crmteos/Discovery_Engine.git`. Google Drive sync limited to `PROJECT_SPEC.md`, `PROJECT_CONTEXT.md`, `PROJECT_STATE.md` only (raw code/vendor files excluded). `scripts/sync_gdrive.py` automates sync. Header synchronized to `v4.4.0 / Phase 35`.
 - **ADR-0007:** Pure Python Zero-Dependency Fallback Engines.
 
 ## 6. Definition of Done (DoD)
 - [ ] All Python files pass `py_compile`.
 - [ ] Zero ungrounded or external dependencies.
-- [ ] `PROJECT_STATE.md` updated and synchronized to v3.8.0 / Phase 29.
+- [ ] `PROJECT_STATE.md` updated and synchronized to v4.4.0 / Phase 35.
 
 ---
 
