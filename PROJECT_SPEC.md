@@ -1,4 +1,4 @@
-# PROJECT_SPEC — Discovery Engine (v5.7.0 / Phase 48)
+# PROJECT_SPEC — Discovery Engine (v5.8.0 / Phase 49)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_SPEC.md
 
 ## 1. Project Goal
