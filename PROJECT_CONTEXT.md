@@ -2,7 +2,7 @@
 
 **Notebook Role:** Master Architect — Data Plane (Second Notebook of the Root Master Governance Pair)
 **Companion File:** `PROJECT_STATE.md` — Control Plane (Master Governance, Node Registry, System Metrics)
-**System Version:** v5.3.0 / Phase 44
+**System Version:** v5.4.0 / Phase 45
 **Date:** 2026-11-11
 **Budget:** $0.00 (Pure Open-Source & Local Hardware Stack - Enterprise Switcher enabled via Vertex AI)
 **Canonical Mirror URL**: https://github.com/crmteos/Discovery_Engine/blob/main/PROJECT_CONTEXT.md
@@ -37,6 +37,8 @@ All data-plane artifacts flow through the **Universal Transactional JSONL Messag
 ---
 
 ## 5. Cross-Node Data Flow Definitions
+
+- **Node 00 — Project Interface:** Dashboard views, execution reporting, BigQuery Agent Search integration, AnythingLLM gateway binding.
 
 | Flow | Source | Destination | Transport | Schema |
 |------|--------|-------------|-----------|--------|
