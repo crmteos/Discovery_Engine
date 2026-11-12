@@ -30,7 +30,7 @@ if str(BRIDGE_DIR) not in sys.path:
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 VERTEX_AI_ENABLED = os.environ.get("VERTEX_AI_ENABLED", "").lower() in ("true", "1")
 VERTEX_LOCATION = os.environ.get("VERTEX_LOCATION", "europe-west1")
-GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "")
+GCPGCP_PROJECT_ID = os.environ.get("GCPGCP_PROJECT_ID", "")
 
 GEMINI_MODEL_CHAIN: list[str] = [
     "gemini-2.5-flash",
@@ -297,7 +297,7 @@ def _cache_stats(enterprise: bool = False, location: str = "europe-west1", proje
         },
     }
 
-    print(_json.dumps(report, ensure_ascii=False, indent=2))
+    print(json.dumps(report, ensure_ascii=False, indent=2))
     print("-" * 52)
     print(f"Google AI Gateway Context Caching Stats (v5.3.0 / Phase 44)")
     print(f"Enterprise: {enterprise}, Location: {location}")
@@ -323,14 +323,14 @@ def run_test(enterprise: bool = False, location: str = "europe-west1") -> int:
     print()
 
     # Initialize client based on enterprise flag
-    client = _client_for_model(DEFAULT_MODEL, enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID)
+    client = _client_for_model(DEFAULT_MODEL, enterprise=enterprise, location=location, project_id=GCPGCP_PROJECT_ID)
 
     # Determine resolved model
     resolved_model = None
     available_models: list[str] = []
 
     if client is not None:
-        available_models = _list_models(client, enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID)
+        available_models = _list_models(client, enterprise=enterprise, location=location, project_id=GCPGCP_PROJECT_ID)
         print(f"Available models: {available_models}")
 
     # Try model chain resolution
@@ -351,12 +351,12 @@ def run_test(enterprise: bool = False, location: str = "europe-west1") -> int:
     if resolved_model and client is not None:
         generation_result = _generate_content(
             client, resolved_model, SMOKE_PROMPT,
-            enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID,
+            enterprise=enterprise, location=location, project_id=GCPGCP_PROJECT_ID,
         )
     else:
         generation_result = _generate_content(
             client, DEFAULT_MODEL, SMOKE_PROMPT,
-            enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID,
+            enterprise=enterprise, location=location, project_id=GCPGCP_PROJECT_ID,
         )
 
     # Build report
@@ -398,7 +398,7 @@ def run_test(enterprise: bool = False, location: str = "europe-west1") -> int:
         pass  # Best-effort bus posting
 
     # Print report
-    print(_json.dumps(report, ensure_ascii=False, indent=2))
+    print(json.dumps(report, ensure_ascii=False, indent=2))
     print("-" * 68)
     print(f"Google AI gateway --test: {telemetry_status.upper()}")
     print(f"  Ping/API available: {'OK' if report['ping_ok'] else 'OFFLINE/FALLBACK'}")
@@ -409,7 +409,61 @@ def run_test(enterprise: bool = False, location: str = "europe-west1") -> int:
 
     # Always return exit_code: 0 (graceful fallback even on failure)
     return 0
-_PROJECT_ID)
+
+    if args.cache_stats:
+        _cache_stats(enterprise=enterprise, location=location, project_id=GCPGCP_PROJECT_ID)
+        return 0
+
+    parser.print_help()
+    return 0
+
+
+def main(argv: Optional[list[str]] = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Google AI Gateway (v5.3.0) — discovery-engine Google AI binding with Context Caching and Enterprise Switcher.",
+    )
+    parser.add_argument(
+        "--enterprise",
+        action="store_true",
+        help="Enable Vertex AI mode (Enterprise). Switches SDK to Vertex AI authentication via GCP project ID and location.",
+    )
+    parser.add_argument(
+        "--location",
+        type=str,
+        default="europe-west1",
+        help="Data residency location (eu: europe-west1, us: us-central1). Default: europe-west1",
+    )
+    parser.add_argument(
+        "--test",
+        action="store_true",
+        help="Run diagnostic validation (ping + model resolve + smoke generate).",
+    )
+    parser.add_argument(
+        "--resolve",
+        action="store_true",
+        help="Print the resolved model from the fallback chain and exit.",
+    )
+    parser.add_argument(
+        "--cache-stats",
+        action="store_true",
+        help="Report active cache metadata and status (spec/context TTL, file sizes).",
+    )
+    args = parser.parse_args(argv)
+
+    enterprise = args.enterprise
+    location = args.location
+
+    # Validate location
+    if location not in ("europe-west1", "us-central1"):
+        print(f"Warning: Unknown location '{location}'. Using default 'europe-west1'.")
+        location = "europe-west1"
+
+    if args.test:
+        return run_test(enterprise=enterprise, location=location)
+
+    if args.resolve:
+        if genai is not None and GEMINI_API_KEY:
+            client = _client_for_model(DEFAULT_MODEL, enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID)
             available = _list_models(client, enterprise=enterprise, location=location, project_id=GCP_PROJECT_ID) if client else []
             resolved = None
             for model_name in GEMINI_MODEL_CHAIN:
